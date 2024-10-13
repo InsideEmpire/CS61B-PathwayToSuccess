@@ -18,15 +18,15 @@ public class Planet {
         mass = m;
         imgFileName = img;
     }
-    public Planet()
-    {
-        xxPos = 0;
-        yyPos = 0;
-        xxVel = 0;
-        yyVel = 0;
-        mass = 0;
-        imgFileName = "";
-    }
+    // public Planet()
+    // {
+    //     xxPos = 0;
+    //     yyPos = 0;
+    //     xxVel = 0;
+    //     yyVel = 0;
+    //     mass = 0;
+    //     imgFileName = "";
+    // }
     public Planet(Planet p) {
         xxPos = p.xxPos;
         yyPos = p.yyPos;

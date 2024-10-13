@@ -1,6 +1,6 @@
 public class NBody {
-    public static int N;
-    public static double R;
+    private static int N;
+    private static double R;
 
     public static double readRadius(String fileName) {
         In in = new In(fileName);
@@ -16,18 +16,19 @@ public class NBody {
         in.readInt(); // 跳过行数
         in.readDouble(); // 跳过半径
         for (int i = 0; i < N; i++) {
-            planets[i] = new Planet();
-            planets[i].xxPos = in.readDouble();
-            planets[i].yyPos = in.readDouble();
-            planets[i].xxVel = in.readDouble();
-            planets[i].yyVel = in.readDouble();
-            planets[i].mass = in.readDouble();
-            planets[i].imgFileName = in.readString();
+            //planets[i] = new Planet();
+            planets[i] = new Planet(in.readDouble(), in.readDouble(), in.readDouble(), in.readDouble(), in.readDouble(), in.readString());
+            // planets[i].xxPos = in.readDouble();
+            // planets[i].yyPos = in.readDouble();
+            // planets[i].xxVel = in.readDouble();
+            // planets[i].yyVel = in.readDouble();
+            // planets[i].mass = in.readDouble();
+            // planets[i].imgFileName = in.readString();
         }
         return planets;
     }
 
-    public static String imageToDraw = "images/starfield.jpg";
+    private static String imageToDraw = "images/starfield.jpg";
 
     public static void main(String[] args) {
         StdDraw.enableDoubleBuffering();
