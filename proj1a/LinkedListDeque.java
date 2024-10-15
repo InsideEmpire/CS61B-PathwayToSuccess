@@ -1,5 +1,5 @@
 public class LinkedListDeque<T> {
-    public static class Node<T> {
+    private static class Node<T> {
         private Node<T> previous;
         private T item;
         private Node<T> next;
@@ -34,13 +34,13 @@ public class LinkedListDeque<T> {
     private Node<T> endSentinel;
     private int size;
 
-    LinkedListDeque() {
+    public LinkedListDeque() {
         size = 0;
         headSentinel = null;
         endSentinel = null;
     }
 
-    LinkedListDeque(T item) {
+    public LinkedListDeque(T item) {
         headSentinel = new Node<>(item);
         endSentinel = headSentinel;
         size = 1;
@@ -49,8 +49,7 @@ public class LinkedListDeque<T> {
     //Adds an item of type T to the front of the deque.
     public void addFirst(T item) {
         headSentinel = new Node<>(item, headSentinel);
-        if (size > 0)
-        {
+        if (size > 0) {
             headSentinel.next.previous = headSentinel;
         } else {
             endSentinel = headSentinel;
@@ -61,8 +60,7 @@ public class LinkedListDeque<T> {
     //Adds an item of type T to the back of the deque.
     public void addLast(T item) {
         endSentinel = new Node<>(endSentinel, item);
-        if (size > 0)
-        {
+        if (size > 0) {
             endSentinel.previous.next = endSentinel;
         } else {
             headSentinel = endSentinel;
@@ -95,8 +93,7 @@ public class LinkedListDeque<T> {
     public T removeFirst() {
         if (headSentinel != null) {
             Node<T> ptr = headSentinel;
-            if (size != 1)
-            {
+            if (size != 1) {
                 headSentinel = headSentinel.next;
                 headSentinel.previous = null;
             } else {
@@ -117,8 +114,7 @@ public class LinkedListDeque<T> {
     public T removeLast() {
         if (endSentinel != null) {
             Node<T> ptr = endSentinel;
-            if (size != 1)
-            {
+            if (size != 1) {
                 endSentinel = endSentinel.previous;
                 endSentinel.next = null;
             } else {

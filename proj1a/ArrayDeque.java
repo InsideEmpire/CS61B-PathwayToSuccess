@@ -1,31 +1,27 @@
 public class ArrayDeque<T> {
-    T[] array;
-    int size;
-    int frontPtr;
-    int backPtr;
-    int capacity;
+    private T[] array;
+    private int size;
+    private int frontPtr;
+    private int backPtr;
+    private int capacity;
     public ArrayDeque() {
         array = (T[]) new Object[8];
         capacity = 8;
-        frontPtr = 0;// the first item
+        frontPtr = 0; // the first item
         backPtr = 0; // one index after the last item
         size = 0;
     }
-    public ArrayDeque(T item) {
-        array = (T[]) new Object[8];
-        capacity = 8;
-        array[0] = item;
-        size = 1;
-        frontPtr = 0;
-        backPtr = 1;
-    }
+//    public ArrayDeque(T item) {
+//        array = (T[]) new Object[8];
+//        capacity = 8;
+//        array[0] = item;
+//        size = 1;
+//        frontPtr = 0;
+//        backPtr = 1;
+//    }
 
-    public boolean isFull() {
-        if ((backPtr) % capacity == frontPtr && size == capacity) {
-            return true;
-        } else {
-            return false;
-        }
+    private boolean isFull() {
+        return (backPtr) % capacity == frontPtr && size == capacity;
     }
     public boolean isEmpty() {
         return size == 0;
@@ -67,7 +63,13 @@ public class ArrayDeque<T> {
         size++;
     }
 
-    public int size() { return size; }
+    public int size() {
+        if (size < 0) {
+            return 0;
+        } else {
+            return size;
+        }
+    }
 
     public void printDeque() {
         int index = frontPtr;
@@ -96,7 +98,7 @@ public class ArrayDeque<T> {
 
     public T get(int index) {
         if (index < 0 || index >= size) {
-            return null;  // 或者抛出 IllegalArgumentException
+            return null; // 或者抛出 IllegalArgumentException
         }
         int i = frontPtr;
         for (int j = 0;j < index;j++) {
