@@ -66,7 +66,11 @@ public class LinkedListDequeTest {
 
 		System.out.println("Running add/remove test.");
 
+<<<<<<< HEAD
 
+=======
+		
+>>>>>>> refs/remotes/origin/main
 		// /*
 		LinkedListDeque<Integer> lld1 = new LinkedListDeque<Integer>();
 		// should be empty 

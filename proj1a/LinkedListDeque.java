@@ -40,6 +40,15 @@ public class LinkedListDeque<T> {
         endSentinel = null;
     }
 
+<<<<<<< HEAD
+=======
+    public LinkedListDeque(T item) {
+        headSentinel = new Node<>(item);
+        endSentinel = headSentinel;
+        size = 1;
+    }
+
+>>>>>>> refs/remotes/origin/main
     //Adds an item of type T to the front of the deque.
     public void addFirst(T item) {
         headSentinel = new Node<>(item, headSentinel);
