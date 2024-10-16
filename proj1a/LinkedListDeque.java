@@ -39,7 +39,7 @@ public class LinkedListDeque<T> {
         headSentinel = null;
         endSentinel = null;
     }
-    
+
     //Adds an item of type T to the front of the deque.
     public void addFirst(T item) {
         headSentinel = new Node<>(item, headSentinel);

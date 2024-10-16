@@ -11,11 +11,11 @@ public class IntList {
     /**
      * First element of list.
      */
-    public int first;
+    private int first;
     /**
      * Remaining elements of list.
      */
-    public IntList rest;
+    private IntList rest;
 
     /**
      * A List with first FIRST0 and rest REST0.
@@ -29,7 +29,7 @@ public class IntList {
      * A List with null rest, and first = 0.
      */
     public IntList() {
-    /* NOTE: public IntList () { }  would also work. */
+        /* NOTE: public IntList () { }  would also work. */
         this(0, null);
     }
 
@@ -81,7 +81,6 @@ public class IntList {
      */
 
     public static IntList dcatenate(IntList A, IntList B) {
-        //TODO:  fill in method
         //null arguments
         if (A == null && B == null) {
             return null;
@@ -104,7 +103,6 @@ public class IntList {
      * * elements of B.  May NOT modify items of A.  Use 'new'.
      */
     public static IntList catenate(IntList A, IntList B) {
-        //TODO:  fill in method
         //null arguments
         if (A == null && B == null) {
             return null;
@@ -112,8 +110,8 @@ public class IntList {
             return B;
         }
 
-        IntList AfollowedB = new IntList(A.first, null);
-        IntList p = AfollowedB;
+        IntList aFollowedByb = new IntList(A.first, null);
+        IntList p = aFollowedByb;
         IntList q = A.rest;
         while (q != null) {
             p.rest = new IntList(q.first, null);
@@ -126,7 +124,48 @@ public class IntList {
             p = p.rest;
             q = q.rest;
         }
-        return AfollowedB;
+        return aFollowedByb;
+    }
+
+    /**
+     * Returns the reverse of the given IntList.
+     * This method is destructive. If given null
+     * as an input, returns null.
+     */
+    public static IntList reverse(IntList A) {
+        if (A == null) {
+            return null;
+        }
+        //int[] valueOfList = new int[0];
+        IntList p = A;
+        IntList head = new IntList(p.first, null);
+        IntList q = head;
+        p = p.rest;
+        while (p != null) {
+            q.rest = new IntList(p.first, null);
+            q = q.rest;
+            p = p.rest;
+        }
+
+        IntList prev = null;   // 用于追踪上一个节点
+        IntList current = head;   // 当前节点
+        IntList next;          // 下一个节点
+        // 迭代遍历链表并反转指针
+        while (current != null) {
+            next = current.rest;  // 保存下一个节点
+            current.rest = prev;  // 反转当前节点的指针
+            prev = current;       // 将 prev 移动到当前节点
+            current = next;       // 将 current 移动到下一个节点
+        }
+        head = prev;
+        q = head;
+        p = A;
+        while (p != null) {
+            p.first = q.first;
+            q = q.rest;
+            p = p.rest;
+        }
+        return head;
     }
 
 
