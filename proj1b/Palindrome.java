@@ -1,4 +1,3 @@
-import org.w3c.dom.Node;
 
 public class Palindrome {
 
@@ -11,17 +10,17 @@ public class Palindrome {
     }
 
     // 使用数组解决
-//    public boolean isPalindrome(String word) {
-//        int len = word.length();
-//        int i = 0;
-//        int j = len - 1;
-//        for (; i < len / 2; i++, j--) {
-//            if (word.charAt(i) != word.charAt(j)) {
-//                return false;
-//            }
-//        }
-//        return true;
-//    }
+    //    public boolean isPalindrome(String word) {
+    //        int len = word.length();
+    //        int i = 0;
+    //        int j = len - 1;
+    //        for (; i < len / 2; i++, j--) {
+    //            if (word.charAt(i) != word.charAt(j)) {
+    //                return false;
+    //            }
+    //        }
+    //        return true;
+    //    }
     // 使用Deque解决
     public boolean isPalindrome(String word) {
         LinkedListDeque<Character> deque = (LinkedListDeque<Character>) wordToDeque(word);
@@ -36,17 +35,17 @@ public class Palindrome {
         return true;
     }
     // 使用数组解决
-//    public boolean isPalindrome(String word, CharacterComparator cc) {
-//        int len = word.length();
-//        int i = 0;
-//        int j = len - 1;
-//        for (; i < len / 2; i++, j--) {
-//            if (!cc.equalChars(word.charAt(i), word.charAt(j))) {
-//                return false;
-//            }
-//        }
-//        return true;
-//    }
+    //    public boolean isPalindrome(String word, CharacterComparator cc) {
+    //        int len = word.length();
+    //        int i = 0;
+    //        int j = len - 1;
+    //        for (; i < len / 2; i++, j--) {
+    //            if (!cc.equalChars(word.charAt(i), word.charAt(j))) {
+    //                return false;
+    //            }
+    //        }
+    //        return true;
+    //    }
     // 使用Deque解决
     public boolean isPalindrome(String word, CharacterComparator cc) {
         LinkedListDeque<Character> deque = (LinkedListDeque<Character>) wordToDeque(word);

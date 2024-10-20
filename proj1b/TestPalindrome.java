@@ -30,8 +30,10 @@ public class TestPalindrome {
     public void testIsPalindromeInOffByOne() {
         assertTrue(palindrome.isPalindrome("flake", new OffByOne()));
         assertTrue(palindrome.isPalindrome("flke", new OffByOne()));
+        assertTrue(palindrome.isPalindrome("FLaKE", new OffByOne()));
         assertTrue(palindrome.isPalindrome("fl&a%ke", new OffByOne()));
         assertFalse(palindrome.isPalindrome("aaaa", new OffByOne()));
+        assertFalse(palindrome.isPalindrome("AAaA", new OffByOne()));
     }
     @Test
     public void testIsPalindromeInOffByN() {
