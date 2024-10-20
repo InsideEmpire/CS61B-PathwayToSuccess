@@ -1,4 +1,3 @@
-import java.awt.event.MouseAdapter;
 
 public class OffByOne implements CharacterComparator {
     @Override

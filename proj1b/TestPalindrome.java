@@ -14,7 +14,7 @@ public class TestPalindrome {
             actual += d.removeFirst();
         }
         assertEquals("persiflage", actual);
-    } //Uncomment this class once you've created your Palindrome class.
+    }
 
     @Test
     public void testIsPalindrome() {
@@ -35,10 +35,10 @@ public class TestPalindrome {
     }
     @Test
     public void testIsPalindromeInOffByN() {
-//        assertTrue(palindrome.isPalindrome("FLAKE", new OffByN(1)));
-//        assertTrue(palindrome.isPalindrome("flke", new OffByN(1)));
-//        assertTrue(palindrome.isPalindrome("fl&a%ke", new OffByN(1)));
-//        assertFalse(palindrome.isPalindrome("aaaa", new OffByN(1)));
+        assertTrue(palindrome.isPalindrome("FLAKE", new OffByN(1)));
+        assertTrue(palindrome.isPalindrome("flke", new OffByN(1)));
+        assertTrue(palindrome.isPalindrome("fl&a%ke", new OffByN(1)));
+        assertFalse(palindrome.isPalindrome("aaaa", new OffByN(1)));
         assertTrue(palindrome.isPalindrome("fFaHh", new OffByN(2)));
         assertTrue(palindrome.isPalindrome("fh", new OffByN(2)));
     }
