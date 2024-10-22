@@ -3,68 +3,54 @@ import org.junit.Test;
 
 public class TestArrayDequeGold {
     @Test
-    public void testDeque() {
-        // @source StudentArrayDequeLauncher
-        StudentArrayDeque<Integer> actual = new StudentArrayDeque<>();
-        ArrayDequeSolution<Integer> expected = new ArrayDequeSolution<>();
-        String statement = "";
-
-        for (int i = 0; i < 100; i += 1) {
-            actual.addFirst(i);
-            statement += "addFirst(" + i + ")\n";
-            expected.addFirst(i);
-        }
-        //actual.printDeque();
-//        for (int i = 0; i < 100; i++) {
-//            assertEquals("Oh noooo!\nThis is bad:\n at " + String.valueOf(i) + " Deque number " + actual.get(i)
-//                            + " not equal to " + expected.get(i) + "!",
-//                    expected.get(i), actual.get(i));
-//        }
-
-
-        for (int i = 0; i < 100; i += 1) {
-            double numberBetweenZeroAndOne = StdRandom.uniform();
-
-            if (numberBetweenZeroAndOne < 0.5) {
-                expected.addLast(i);
-                statement += "addLast(" + i + ")\n";
-                actual.addLast(i);
+    public void testStudentArrayDeque() {
+        StudentArrayDeque<Integer> testArray = new StudentArrayDeque<>();
+        ArrayDequeSolution<Integer> stdArray = new ArrayDequeSolution<>();
+        String log = "";
+        for (int i = 0; i < 1000; i++) {
+            if (stdArray.isEmpty()) {
+                int addNumber = StdRandom.uniform(1000);
+                int headOrBack = StdRandom.uniform(2);
+                if (headOrBack == 0) {
+                    log = log + "addFirst(" + addNumber + ")\n";
+                    testArray.addFirst(addNumber);
+                    stdArray.addFirst(addNumber);
+                } else {
+                    log = log + "addLast(" + addNumber + ")\n";
+                    testArray.addLast(addNumber);
+                    stdArray.addLast(addNumber);
+                }
             } else {
-                expected.addFirst(i);
-                statement += "addFirst(" + i + ")\n";
-                actual.addFirst(i);
-            }
-        }
-        //actual.printDeque();
-
-//        for (int i = 0; i < 100; i++) {
-//            assertEquals("Oh noooo!\nThis is bad:\n at " + String.valueOf(i) + " Deque number " + actual.get(i)
-//                            + " not equal to " + expected.get(i) + "!",
-//                    expected.get(i), actual.get(i));
-//        }
-
-        for (int i = 0; i < 30; i++) {
-            double numberBetweenZeroAndOne = StdRandom.uniform();
-
-            if (numberBetweenZeroAndOne < 0.5) {
-                int tem1, tem2;
-                tem1 = expected.removeFirst();
-                tem2 = actual.removeFirst();
-                statement += "removeFirst(): " + tem2;
-                assertEquals(statement, tem1, tem2);
-            } else {
-                int tem1, tem2;
-                tem1 = expected.removeLast();
-                tem2 = actual.removeLast();
-                statement += "removeLast(): " + tem2;
-                assertEquals(statement, tem1, tem2);
+                int x = StdRandom.uniform(4);
+                int addNumber = StdRandom.uniform(1000);
+                Integer testremoveNumber = 1;
+                Integer stdremoveNumber = 1;
+                switch (x) {
+                    case 0:
+                        log = log + "addFirst(" + addNumber + ")\n";
+                        testArray.addFirst(addNumber);
+                        stdArray.addFirst(addNumber);
+                        break;
+                    case 1:
+                        log = log + "addLast(" + addNumber + ")\n";
+                        testArray.addLast(addNumber);
+                        stdArray.addLast(addNumber);
+                        break;
+                    case 2:
+                        log = log + "removeFirst()\n";
+                        testremoveNumber = testArray.removeFirst();
+                        stdremoveNumber = stdArray.removeFirst();
+                        break;
+                    case 3:
+                        log = log + "removeLast()\n";
+                        testremoveNumber = testArray.removeLast();
+                        stdremoveNumber = stdArray.removeLast();
+                        break;
+                    default:
+                }
+                assertEquals(log, stdremoveNumber, testremoveNumber);
             }
         }
 
-//        for (int i = 0; i < 70; i++) {
-//            assertEquals("Oh noooo!\nThis is bad:\n at " + String.valueOf(i) + " Deque number " + actual.get(i)
-//                            + " not equal to " + expected.get(i) + "!",
-//                    expected.get(i), actual.get(i));
-//        }
     }
 }
