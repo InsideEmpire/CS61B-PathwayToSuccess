@@ -1,8 +1,10 @@
+// TODO: Make sure to make this class a part of the synthesizer package
 package synthesizer;
-
 import java.util.Iterator;
 
-public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T> {
+//TODO: Make sure to make this class and all of its methods public
+//TODO: Make sure to make this class extend AbstractBoundedQueue<t>
+public class ArrayRingBuffer<T>  extends AbstractBoundedQueue<T> {
     /* Index for the next dequeue or peek. */
     private int first;            // index for the next dequeue or peek
     /* Index for the next enqueue. */
@@ -14,11 +16,9 @@ public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T> {
      * Create a new ArrayRingBuffer with the given capacity.
      */
     public ArrayRingBuffer(int capacity) {
-        first = 0;
-        last = 0;
-        fillCount = 0;
+        rb = (T[]) new Object[capacity];
+        first = last = fillCount = 0;
         this.capacity = capacity;
-        rb = (T[]) new Object[this.capacity];
     }
 
     /**
@@ -26,13 +26,14 @@ public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T> {
      * throw new RuntimeException("Ring buffer overflow"). Exceptions
      * covered Monday.
      */
+    @Override
     public void enqueue(T x) {
-        if (isFull()) {
-            throw new RuntimeException();
+        if (isFull()){
+            throw new RuntimeException("Ring buffer overflow");
         }
         rb[last] = x;
+        fillCount++;
         last = (last + 1) % capacity;
-        fillCount += 1;
     }
 
     /**
@@ -40,48 +41,50 @@ public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T> {
      * throw new RuntimeException("Ring buffer underflow"). Exceptions
      * covered Monday.
      */
+    @Override
     public T dequeue() {
-        if (isEmpty()) {
-            throw new RuntimeException();
+        // TODO: Dequeue the first item. Don't forget to decrease fillCount and update
+        if (isEmpty()){
+            throw new RuntimeException("Ring buffer underflow");
         }
-        T dequeueValue = rb[first];
+        T retValue = rb[first];
+        fillCount--;
         first = (first + 1) % capacity;
-        fillCount -= 1;
-        return dequeueValue;
+        return retValue;
     }
 
     /**
      * Return oldest item, but don't remove it.
      */
+    @Override
     public T peek() {
-        if (isEmpty()) {
-            throw new RuntimeException();
-        }
+        // TODO: Return the first item. None of your instance variables should change.
         return rb[first];
+    }
+
+    // TODO: When you get to part 5, implement the needed code to support iteration.
+    private class ArrayRingBufferIterator implements Iterator<T> {
+        private int pos;
+        private int curNum;
+        public ArrayRingBufferIterator() {
+            pos = first;
+            curNum = 0;
+        }
+
+        public boolean hasNext() {
+            return curNum < fillCount;
+        }
+
+        public T next() {
+            T retValue = rb[pos];
+            pos = (pos + 1) % capacity;
+            curNum++;
+            return retValue;
+        }
     }
 
     @Override
     public Iterator<T> iterator() {
-        return new SetArrayRingBufferIterator();
-    }
-
-    private class SetArrayRingBufferIterator implements Iterator<T> {
-        int wizPos;
-
-        SetArrayRingBufferIterator() {
-            wizPos = first;
-        }
-
-        @Override
-        public boolean hasNext() {
-            return wizPos < last;
-        }
-
-        @Override
-        public T next() {
-            T returnItem = rb[wizPos];
-            wizPos = (wizPos + 1) % capacity;
-            return returnItem;
-        }
+        return new ArrayRingBufferIterator();
     }
 }
