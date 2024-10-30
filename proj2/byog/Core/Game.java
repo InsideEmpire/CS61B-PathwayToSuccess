@@ -9,6 +9,12 @@ public class Game {
     public static final int WIDTH = 80;
     public static final int HEIGHT = 30;
 
+    public void main(String[] args) {
+        if (args.length != 0) {
+            TETile[][] world = playWithInputString(args[0]);
+        }
+    }
+
     /**
      * Method used for playing a fresh game. The game should start from the main menu.
      */

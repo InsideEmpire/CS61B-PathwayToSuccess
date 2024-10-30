@@ -9,6 +9,8 @@ import java.util.List;
 public class testDemo {
     private static final int WIDTH = 60;
     private static final int HEIGHT = 30;
+    // 172898 2354170
+    private static final int SEED = 2354170;
 
     public static void main(String[] args) {
         // initialize the tile rendering engine with a window of size WIDTH x HEIGHT
@@ -23,15 +25,11 @@ public class testDemo {
             }
         }
 
-        // fills in a block 14 tiles wide by 4 tiles tall
-//        for (int x = 20; x < 35; x += 1) {
-//            for (int y = 5; y < 10; y += 1) {
-//                world[x][y] = Tileset.WALL;
-//            }
-//        }
-        ListOfGenerators generators = new ListOfGenerators(world);
 
-        // draws the world to the screen
+
+        RoomGenerator generator = new RoomGenerator(WIDTH, HEIGHT, SEED);
+        List<Room> rooms = generator.generateRooms(world);
+
         ter.renderFrame(world);
     }
 }
