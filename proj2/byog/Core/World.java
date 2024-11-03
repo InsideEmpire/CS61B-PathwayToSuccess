@@ -6,13 +6,8 @@ import byog.TileEngine.Tileset;
 
 import java.util.List;
 
-public class testDemo {
-    private static final int WIDTH = 80;
-    private static final int HEIGHT = 30;
-    // 172898 2354170
-    private static final int SEED = 2354170;
-
-    public static void main(String[] args) {
+public class World {
+    public static TETile[][] initialise(int WIDTH, int HEIGHT, long SEED) {
         // initialize the tile rendering engine with a window of size WIDTH x HEIGHT
         TERenderer ter = new TERenderer();
         ter.initialize(WIDTH, HEIGHT);
@@ -25,11 +20,11 @@ public class testDemo {
             }
         }
 
-
-
         RoomGenerator generator = new RoomGenerator(WIDTH, HEIGHT, SEED);
         List<Room> rooms = generator.generateRooms(world);
 
         ter.renderFrame(world);
+
+        return world;
     }
 }

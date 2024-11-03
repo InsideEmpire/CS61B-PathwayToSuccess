@@ -20,34 +20,6 @@ public class RoomGenerator {
         this.maxRooms = random.nextInt(10, 15);
     }
 
-    // Since this method cannot generate the number of rooms specified by the maxRoom variable,
-    // the corresponding code has been commented out
-/*
-    public List<Room> generateRooms(TETile[][] world) {
-        List<Room> rooms = new ArrayList<>();
-
-        for (int i = 0; i < maxRooms; i++) {
-            int roomWidth = random.nextInt(4, 10); // 房间宽度范围
-            int roomHeight = random.nextInt(4, 10); // 房间高度范围
-            int roomX = random.nextInt(0, WIDTH - roomWidth - 1);
-            int roomY = random.nextInt(0, HEIGHT - roomHeight - 1);
-
-            Room newRoom = new Room(roomX, roomY, roomWidth, roomHeight, world);
-
-            if (newRoom.ifValid(world) && !isOverlapping(newRoom, rooms)) {
-                //newRoom.RoomOf(world); useless
-                newRoom.toDrawOn(world);
-                rooms.add(newRoom);
-                if (rooms.size() > 1) {
-                    // TODO cancel the comment
-                    // TODO no need to connect each rooms
-                     connectRooms(rooms.get(rooms.size() - 2), newRoom, world);
-                }
-            }
-        }
-        return rooms;
-    }*/
-
     public List<Room> generateRooms(TETile[][] world) {
         List<Room> rooms = new ArrayList<>();
 
@@ -102,12 +74,12 @@ public class RoomGenerator {
     }
 
     private void drawHorizontalTunnel(int x1, int x2, int y, TETile[][] world) {
-        Room hallway = new Room(Math.min(x1, x2) - 1, y - 1, Math.abs(x1 - x2) + 2, 3, world);
+        Room hallway = new Room(Math.min(x1, x2) - 1, y - 1, Math.abs(x1 - x2) + 3, 3, world);
         hallway.toDrawOn(world);
     }
 
     private void drawVerticalTunnel(int y1, int y2, int x, TETile[][] world) {
-        Room hallway = new Room(x - 1, Math.min(y1, y2) - 1, 3, Math.abs(y1 - y2) + 2, world);
+        Room hallway = new Room(x - 1, Math.min(y1, y2) - 1, 3, Math.abs(y1 - y2) + 3, world);
         hallway.toDrawOn(world);
     }
 
