@@ -14,6 +14,7 @@ public class Game {
     public static final int HEIGHT = 30;
     private static final int TILE_SIZE = 16;
     long SEED = 0L;
+    static boolean isPlaying = false;
 
     public void main(String[] args) {
         if (args.length != 0) {
@@ -28,6 +29,8 @@ public class Game {
         displayMainMenu();
         SEED = stringAnalise(keyboardInput());
         TETile[][] world = World.initialise(WIDTH, HEIGHT, SEED);
+        isPlaying = true;
+        playing(world);
     }
 
     /**
@@ -49,8 +52,38 @@ public class Game {
 
         SEED = stringAnalise(input);
         TETile[][] world = World.initialise(WIDTH, HEIGHT, SEED);
-
+        isPlaying = true;
         return world;
+    }
+
+    public static void playing(TETile[][] world) {
+        TERenderer ter = new TERenderer();
+        ter.initialize(WIDTH, HEIGHT);
+        while (isPlaying) {
+            ter.renderFrame(world);
+            displayGameUI(world);
+        }
+    }
+
+    public static String cursorPointing(TETile[][] world) {
+        double x = StdDraw.mouseX();
+        double y = StdDraw.mouseY();
+        int xPos = (int) x;
+        int yPos = (int) y;
+        return world[xPos][yPos].description();
+    }
+    public static String cursorPointing() {
+        double x = StdDraw.mouseX();
+        double y = StdDraw.mouseY();
+        return "x: " + String.valueOf(x) + " y: " + String.valueOf(x);
+    }
+
+    public static void displayGameUI(TETile[][] world) {
+        StdDraw.setFont(new Font("Monaco", Font.BOLD, 15));
+        StdDraw.setPenColor(Color.WHITE);
+        StdDraw.text(10, HEIGHT - 2, cursorPointing(world));
+        StdDraw.show();
+        StdDraw.setFont(new Font("Monaco", Font.BOLD, 20));
     }
 
     public void displayMainMenu() {
