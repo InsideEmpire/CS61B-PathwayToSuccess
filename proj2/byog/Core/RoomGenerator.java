@@ -22,6 +22,7 @@ public class RoomGenerator {
 
     public List<Room> generateRooms(TETile[][] world) {
         List<Room> rooms = new ArrayList<>();
+        List<Room> tunnels = new ArrayList<>();
 
         for (int i = 0; i < maxRooms; i++) {
             int roomWidth = RandomUtils.uniform(random, 4, 10); // 房间宽度范围
@@ -38,13 +39,14 @@ public class RoomGenerator {
                 rooms.add(newRoom);
 
                 if (rooms.size() > 1) {
-                    connectRooms(rooms.get(rooms.size() - 2), newRoom, world);
+                    tunnels.addAll(connectRooms(rooms.get(rooms.size() - 2), newRoom, world));
                 }
             } else {
                 i -= 1;
             }
         }
         generateRandomOutdoor(world);
+        rooms.addAll(tunnels);
         return rooms;
     }
 
@@ -57,29 +59,33 @@ public class RoomGenerator {
         return false;
     }
 
-    private void connectRooms(Room roomA, Room roomB, TETile[][] world) {
+    private List<Room> connectRooms(Room roomA, Room roomB, TETile[][] world) {
         int centerAx = roomA.x + roomA.width / 2;
         int centerAy = roomA.y + roomA.height / 2;
         int centerBx = roomB.x + roomB.width / 2;
         int centerBy = roomB.y + roomB.height / 2;
+        List<Room> twoTunnels = new ArrayList<>();
 
         if (random.nextBoolean()) {
-            drawHorizontalTunnel(centerAx, centerBx, centerAy, world);
-            drawVerticalTunnel(centerAy, centerBy, centerBx, world);
+            twoTunnels.add(drawHorizontalTunnel(centerAx, centerBx, centerAy, world));
+            twoTunnels.add(drawVerticalTunnel(centerAy, centerBy, centerBx, world));
         } else {
-            drawVerticalTunnel(centerAy, centerBy, centerAx, world);
-            drawHorizontalTunnel(centerAx, centerBx, centerBy, world);
+            twoTunnels.add(drawVerticalTunnel(centerAy, centerBy, centerAx, world));
+            twoTunnels.add(drawHorizontalTunnel(centerAx, centerBx, centerBy, world));
         }
+        return twoTunnels;
     }
 
-    private void drawHorizontalTunnel(int x1, int x2, int y, TETile[][] world) {
+    private Room drawHorizontalTunnel(int x1, int x2, int y, TETile[][] world) {
         Room hallway = new Room(Math.min(x1, x2) - 1, y - 1, Math.abs(x1 - x2) + 3, 3, world);
         hallway.toDrawOn(world);
+        return hallway;
     }
 
-    private void drawVerticalTunnel(int y1, int y2, int x, TETile[][] world) {
+    private Room drawVerticalTunnel(int y1, int y2, int x, TETile[][] world) {
         Room hallway = new Room(x - 1, Math.min(y1, y2) - 1, 3, Math.abs(y1 - y2) + 3, world);
         hallway.toDrawOn(world);
+        return hallway;
     }
 
     private void generateRandomOutdoor(TETile[][] world) {
@@ -95,6 +101,8 @@ public class RoomGenerator {
         }
         if (world[x][y] == Tileset.WALL) {
             world[x][y] = Tileset.UNLOCKED_DOOR;
+            Outdoor.x = x;
+            Outdoor.y = y;
         }
     }
 }

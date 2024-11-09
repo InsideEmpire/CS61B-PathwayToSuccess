@@ -3,6 +3,8 @@ package byog.Core;
 import byog.TileEngine.TETile;
 import byog.TileEngine.Tileset;
 
+import java.util.List;
+
 public class Room {
     int x;
     int y;
@@ -63,5 +65,11 @@ public class Room {
         drawWallOn(inputWorld);
         // then call drawFloor
         drawFloorOn(inputWorld);
+    }
+
+    public static void toDrawOn(TETile[][] inputWorld, List<Room> rooms) {
+        for (Room room : rooms) {
+            room.toDrawOn(inputWorld);
+        }
     }
 }

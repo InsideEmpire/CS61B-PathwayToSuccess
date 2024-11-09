@@ -13,8 +13,9 @@ public class Game {
     public static final int WIDTH = 80;
     public static final int HEIGHT = 30;
     private static final int TILE_SIZE = 16;
-    long SEED = 0L;
-    static boolean isPlaying = false;
+    public long SEED = 0L;
+    private boolean isPlaying = false;
+    Player player;
 
     public void main(String[] args) {
         if (args.length != 0) {
@@ -30,6 +31,7 @@ public class Game {
         SEED = stringAnalise(keyboardInput());
         TETile[][] world = World.initialise(WIDTH, HEIGHT, SEED);
         isPlaying = true;
+        player = new Player(world, SEED);
         playing(world);
     }
 
@@ -52,33 +54,65 @@ public class Game {
 
         SEED = stringAnalise(input);
         TETile[][] world = World.initialise(WIDTH, HEIGHT, SEED);
+        player = new Player(world, SEED);
         isPlaying = true;
         return world;
     }
 
-    public static void playing(TETile[][] world) {
-        TERenderer ter = new TERenderer();
+    public void playing(TETile[][] world) {
+        ter = new TERenderer();
         ter.initialize(WIDTH, HEIGHT);
         while (isPlaying) {
             ter.renderFrame(world);
             displayGameUI(world);
+            movePlayer(world);
         }
     }
 
-    public static String cursorPointing(TETile[][] world) {
+    private void movePlayer(TETile[][] world) {
+        player.move(world, keyboardMove());
+    }
+
+    private static Toward keyboardMove() {
+        char input;
+        while (true) {
+            if (StdDraw.hasNextKeyTyped()) {
+                input = StdDraw.nextKeyTyped();
+                switch (input) {
+                    case 'W':
+                    case 'w':
+                        return Toward.W;
+                    case 'S':
+                    case 's':
+                        return Toward.S;
+                    case 'A':
+                    case 'a':
+                        return Toward.A;
+                    case 'D':
+                    case 'd':
+                        return Toward.D;
+                    default:
+                        return Toward.STAY;
+                }
+            }
+            return Toward.STAY;
+        }
+    }
+
+    private static String cursorPointing(TETile[][] world) {
         double x = StdDraw.mouseX();
         double y = StdDraw.mouseY();
         int xPos = (int) x;
         int yPos = (int) y;
         return world[xPos][yPos].description();
     }
-    public static String cursorPointing() {
+    private static String cursorPointing() {
         double x = StdDraw.mouseX();
         double y = StdDraw.mouseY();
         return "x: " + String.valueOf(x) + " y: " + String.valueOf(x);
     }
 
-    public static void displayGameUI(TETile[][] world) {
+    private static void displayGameUI(TETile[][] world) {
         StdDraw.setFont(new Font("Monaco", Font.BOLD, 15));
         StdDraw.setPenColor(Color.WHITE);
         StdDraw.text(10, HEIGHT - 2, cursorPointing(world));
@@ -86,7 +120,7 @@ public class Game {
         StdDraw.setFont(new Font("Monaco", Font.BOLD, 20));
     }
 
-    public void displayMainMenu() {
+    private void displayMainMenu() {
         int midWidth = WIDTH / 2;
         int midHeight = HEIGHT / 2;
         StdDraw.setCanvasSize(WIDTH * TILE_SIZE, HEIGHT * TILE_SIZE);
@@ -108,7 +142,7 @@ public class Game {
         StdDraw.show();
     }
 
-    public long stringAnalise(String input) {
+    private long stringAnalise(String input) {
         boolean startNew = false;
         if (input.length() < 3) {
             return -1;
@@ -131,7 +165,7 @@ public class Game {
     }
 
 
-    public String keyboardInput() {
+    private String keyboardInput() {
         StringBuilder command = new StringBuilder();
         char input;
         while (true) {
