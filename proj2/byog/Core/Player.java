@@ -3,15 +3,21 @@ package byog.Core;
 import byog.TileEngine.TETile;
 import byog.TileEngine.Tileset;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.Random;
 
-public class Player {
+public class Player implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
     private int x;
     private int y;
+
     Player(int xPos, int yPos) {
         this.x = xPos;
         this.y = yPos;
     }
+
     Player(TETile[][] world, long seed) {
         Random random = new Random(seed);
         this.x = RandomUtils.uniform(random, 0, world.length - 1);
@@ -27,9 +33,11 @@ public class Player {
             drawOnWorld(world);
         }
     }
-    private void drawOnWorld(TETile[][] world) {
+
+    public void drawOnWorld(TETile[][] world) {
         world[x][y] = Tileset.PLAYER;
     }
+
     public void move(TETile[][] world, Toward direction) {
         int newX = x + direction.x;
         int newY = y + direction.y;

@@ -3,14 +3,18 @@ package byog.Core;
 import byog.TileEngine.TETile;
 import byog.TileEngine.Tileset;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.List;
 
-public class Room {
+public class Room implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
     int x;
     int y;
     int width;
     int height;
-    TETile[][] world;
+    transient TETile[][] world;
 
     public Room(int roomX, int roomY, int roomWidth, int roomHeight, TETile[][] inputWorld) {
         x = roomX;

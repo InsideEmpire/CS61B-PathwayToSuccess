@@ -3,11 +3,15 @@ package byog.Core;
 import byog.TileEngine.TETile;
 import byog.TileEngine.Tileset;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class RoomGenerator {
+public class RoomGenerator implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
     private int WIDTH;
     private int HEIGHT;
     private int maxRooms;

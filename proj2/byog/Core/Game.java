@@ -6,6 +6,8 @@ import edu.princeton.cs.introcs.StdDraw;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.io.*;
+import java.util.List;
 
 public class Game {
     TERenderer ter = new TERenderer();
@@ -14,8 +16,10 @@ public class Game {
     public static final int HEIGHT = 30;
     private static final int TILE_SIZE = 16;
     public long SEED = 0L;
-    private boolean isPlaying = false;
-    Player player;
+    private static boolean isPlaying = false;
+//    private World world;
+//    TETile[][] world;
+//    Player player;
 
     public void main(String[] args) {
         if (args.length != 0) {
@@ -29,10 +33,16 @@ public class Game {
     public void playWithKeyboard() {
         displayMainMenu();
         SEED = stringAnalise(keyboardInput());
-        TETile[][] world = World.initialise(WIDTH, HEIGHT, SEED);
-        isPlaying = true;
-        player = new Player(world, SEED);
-        playing(world);
+
+        if (SEED != -1) {
+            World.world = World.initialise(WIDTH, HEIGHT, SEED);
+            isPlaying = true;
+        } else {
+            World.world = World.load();
+        }
+
+//        player = new Player(world, SEED);
+        playing(World.world);
     }
 
     /**
@@ -54,7 +64,7 @@ public class Game {
 
         SEED = stringAnalise(input);
         TETile[][] world = World.initialise(WIDTH, HEIGHT, SEED);
-        player = new Player(world, SEED);
+//        player = new Player(world, SEED);
         isPlaying = true;
         return world;
     }
@@ -65,15 +75,22 @@ public class Game {
         while (isPlaying) {
             ter.renderFrame(world);
             displayGameUI(world);
-            movePlayer(world);
+            World.movePlayer(world);
+        }
+        if (!isPlaying) {
+            System.out.println("isPlaying已更改为false");
+            StdDraw.clear();
+            StdDraw.show();
+            System.exit(0);
+            return;
         }
     }
 
-    private void movePlayer(TETile[][] world) {
-        player.move(world, keyboardMove());
-    }
+//    private void movePlayer(TETile[][] world) {
+//        player.move(world, keyboardMove());
+//    }
 
-    private static Toward keyboardMove() {
+    public static Toward keyboardMove() {
         char input;
         while (true) {
             if (StdDraw.hasNextKeyTyped()) {
@@ -91,6 +108,20 @@ public class Game {
                     case 'D':
                     case 'd':
                         return Toward.D;
+                    case ':':
+                        // 处理 ':' 按键，进行保存并退出
+                        while (true) {
+                            if (StdDraw.hasNextKeyTyped()) {
+                                input = StdDraw.nextKeyTyped();
+                                if (input == 'Q' || input == 'q') {
+                                    System.out.println("成功保存退出");
+                                    World.quitAndSaving();  // 保存并退出
+                                    isPlaying = false;
+                                    return Toward.STAY;  // 退出循环后返回一个值
+                                }
+                            }
+                        }
+//                        break;
                     default:
                         return Toward.STAY;
                 }
@@ -98,6 +129,31 @@ public class Game {
             return Toward.STAY;
         }
     }
+
+    public static void quitAndSaving() {
+        try (ObjectOutput oos = new ObjectOutputStream(new FileOutputStream("byog/Core/data/World.ser"))) {
+            oos.writeObject(World);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static TETile[][] load() {
+        try (ObjectInput ois = new ObjectInputStream(new FileInputStream("byog/Core/data/World.ser"))) {
+            roomsAndTunnels = (List<Room>) ois.readObject();
+            generator = (RoomGenerator) ois.readObject();
+            player = (Player) ois.readObject();
+            world = reset();
+            player.drawOnWorld(world);
+            return world;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+//    void quitAndSaving() {
+//
+//    }
 
     private static String cursorPointing(TETile[][] world) {
         double x = StdDraw.mouseX();
@@ -120,7 +176,7 @@ public class Game {
         StdDraw.setFont(new Font("Monaco", Font.BOLD, 20));
     }
 
-    private void displayMainMenu() {
+    private static void displayMainMenu() {
         int midWidth = WIDTH / 2;
         int midHeight = HEIGHT / 2;
         StdDraw.setCanvasSize(WIDTH * TILE_SIZE, HEIGHT * TILE_SIZE);
@@ -142,8 +198,13 @@ public class Game {
         StdDraw.show();
     }
 
-    private long stringAnalise(String input) {
-        boolean startNew = false;
+    private static long stringAnalise(String input) {
+        if (input.equals("l")
+                || input.equals("L")
+                && isPlaying) {
+            return -2;
+        }
+//        boolean startNew = false;
         if (input.length() < 3) {
             return -1;
         }
@@ -165,7 +226,7 @@ public class Game {
     }
 
 
-    private String keyboardInput() {
+    private static String keyboardInput() {
         StringBuilder command = new StringBuilder();
         char input;
         while (true) {
@@ -174,6 +235,12 @@ public class Game {
             }
             input = StdDraw.nextKeyTyped();
             command.append(input);
+            if (command.charAt(command.length() - 1) == 'l'
+                    || command.charAt(command.length() - 1) == 'L') {
+//                World.load();
+                isPlaying = true;
+                break;
+            }
             if (command.charAt(command.length() - 1) == 's'
                     || command.charAt(command.length() - 1) == 'S') {
                 break;
