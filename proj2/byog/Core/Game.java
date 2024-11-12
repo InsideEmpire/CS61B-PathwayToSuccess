@@ -7,7 +7,6 @@ import edu.princeton.cs.introcs.StdDraw;
 import java.awt.Color;
 import java.awt.Font;
 import java.io.*;
-import java.util.List;
 
 public class Game {
     TERenderer ter = new TERenderer();
@@ -17,9 +16,7 @@ public class Game {
     private static final int TILE_SIZE = 16;
     public long SEED = 0L;
     private static boolean isPlaying = false;
-//    private World world;
-//    TETile[][] world;
-//    Player player;
+    private World world;
 
     public void main(String[] args) {
         if (args.length != 0) {
@@ -34,63 +31,61 @@ public class Game {
         displayMainMenu();
         SEED = stringAnalise(keyboardInput());
 
-        if (SEED != -1) {
-            World.world = World.initialise(WIDTH, HEIGHT, SEED);
+        if (SEED >= 0) {
+            world = new World(WIDTH, HEIGHT, SEED);
             isPlaying = true;
-        } else {
-            World.world = World.load();
+        } else if (SEED == -2){
+            load();
         }
 
-//        player = new Player(world, SEED);
-        playing(World.world);
+//        player = new Player(teTiles, SEED);
+        playing(world.teTiles);
     }
 
     /**
      * Method used for autograding and testing the game code. The input string will be a series
      * of characters (for example, "n123sswwdasdassadwas", "n123sss:q", "lwww". The game should
      * behave exactly as if the user typed these characters into the game after playing
-     * playWithKeyboard. If the string ends in ":q", the same world should be returned as if the
+     * playWithKeyboard. If the string ends in ":q", the same teTiles should be returned as if the
      * string did not end with q. For example "n123sss" and "n123sss:q" should return the same
-     * world. However, the behavior is slightly different. After playing with "n123sss:q", the game
+     * teTiles. However, the behavior is slightly different. After playing with "n123sss:q", the game
      * should save, and thus if we then called playWithInputString with the string "l", we'd expect
-     * to get the exact same world back again, since this corresponds to loading the saved game.
+     * to get the exact same teTiles back again, since this corresponds to loading the saved game.
      *
      * @param input the input string to feed to your program
-     * @return the 2D TETile[][] representing the state of the world
+     * @return the 2D TETile[][] representing the state of the teTiles
      */
     public TETile[][] playWithInputString(String input) {
-        // and return a 2D tile representation of the world that would have been
+        // and return a 2D tile representation of the teTiles that would have been
         // drawn if the same inputs had been given to playWithKeyboard().
 
         SEED = stringAnalise(input);
-        TETile[][] world = World.initialise(WIDTH, HEIGHT, SEED);
-//        player = new Player(world, SEED);
-        isPlaying = true;
-        return world;
+        world = new World(WIDTH, HEIGHT, SEED);
+        return world.teTiles;
     }
 
-    public void playing(TETile[][] world) {
+    public void playing(TETile[][] teTiles) {
         ter = new TERenderer();
         ter.initialize(WIDTH, HEIGHT);
         while (isPlaying) {
-            ter.renderFrame(world);
-            displayGameUI(world);
-            World.movePlayer(world);
+            ter.renderFrame(world.teTiles);
+            displayGameUI(world.teTiles);
+            movePlayer();
         }
         if (!isPlaying) {
             System.out.println("isPlaying已更改为false");
             StdDraw.clear();
             StdDraw.show();
             System.exit(0);
-            return;
         }
     }
 
-//    private void movePlayer(TETile[][] world) {
-//        player.move(world, keyboardMove());
-//    }
 
-    public static Toward keyboardMove() {
+    public void movePlayer() {
+        world.player.move(world, keyboardMove());
+    }
+
+    public Toward keyboardMove() {
         char input;
         while (true) {
             if (StdDraw.hasNextKeyTyped()) {
@@ -115,7 +110,7 @@ public class Game {
                                 input = StdDraw.nextKeyTyped();
                                 if (input == 'Q' || input == 'q') {
                                     System.out.println("成功保存退出");
-                                    World.quitAndSaving();  // 保存并退出
+                                    quitAndSaving();  // 保存并退出
                                     isPlaying = false;
                                     return Toward.STAY;  // 退出循环后返回一个值
                                 }
@@ -130,30 +125,23 @@ public class Game {
         }
     }
 
-    public static void quitAndSaving() {
+    public  void quitAndSaving() {
         try (ObjectOutput oos = new ObjectOutputStream(new FileOutputStream("byog/Core/data/World.ser"))) {
-            oos.writeObject(World);
+            oos.writeObject(world);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    public static TETile[][] load() {
+    public  void load() {
         try (ObjectInput ois = new ObjectInputStream(new FileInputStream("byog/Core/data/World.ser"))) {
-            roomsAndTunnels = (List<Room>) ois.readObject();
-            generator = (RoomGenerator) ois.readObject();
-            player = (Player) ois.readObject();
-            world = reset();
-            player.drawOnWorld(world);
-            return world;
+            world = (World) ois.readObject();
+            System.out.println(world);
+            world.resetLoad();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
-
-//    void quitAndSaving() {
-//
-//    }
 
     private static String cursorPointing(TETile[][] world) {
         double x = StdDraw.mouseX();
@@ -237,7 +225,6 @@ public class Game {
             command.append(input);
             if (command.charAt(command.length() - 1) == 'l'
                     || command.charAt(command.length() - 1) == 'L') {
-//                World.load();
                 isPlaying = true;
                 break;
             }

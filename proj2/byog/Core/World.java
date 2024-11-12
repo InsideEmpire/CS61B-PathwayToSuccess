@@ -6,67 +6,87 @@ import byog.TileEngine.Tileset;
 import java.io.*;
 import java.util.List;
 
-import static byog.Core.Game.keyboardMove;
+//import static byog.Core.Game.keyboardMove;
 
 public class World implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
-    static List<Room> roomsAndTunnels;
-    static TETile[][] world;
-    static RoomGenerator generator;
-    static Player player;
+    int width;
+    int height;
+    List<Room> roomsAndTunnels;
+    transient TETile[][] teTiles;
+    RoomGenerator generator;
+    Player player;
 
-    public static TETile[][] initialise(int width, int height, long seed) {
+    World(int width, int height, long seed) {
 
         // initialize the tile rendering engine with a window of size WIDTH x HEIGHT
-
+        this.width = width;
+        this.height = height;
         // initialize tiles
-        world = new TETile[width][height];
+        teTiles = new TETile[width][height];
         for (int x = 0; x < width; x += 1) {
             for (int y = 0; y < height; y += 1) {
-                world[x][y] = Tileset.NOTHING;
+                teTiles[x][y] = Tileset.NOTHING;
             }
         }
 
         generator = new RoomGenerator(width, height, seed);
-        roomsAndTunnels = generator.generateRooms(world);
+        roomsAndTunnels = generator.generateRooms(teTiles);
 
-        player = new Player(world, seed);
+        player = new Player(teTiles, seed);
 
-        return world;
     }
 
-    public static TETile[][] reset() {
-        Room.toDrawOn(world, roomsAndTunnels);
-        world[Outdoor.x][Outdoor.y] = Tileset.UNLOCKED_DOOR;
-        return world;
+    public TETile[][] initialise(int width, int height, long seed) {
+
+        // initialize the tile rendering engine with a window of size WIDTH x HEIGHT
+
+        // initialize tiles
+        teTiles = new TETile[width][height];
+        for (int x = 0; x < width; x += 1) {
+            for (int y = 0; y < height; y += 1) {
+                teTiles[x][y] = Tileset.NOTHING;
+            }
+        }
+
+        generator = new RoomGenerator(width, height, seed);
+        roomsAndTunnels = generator.generateRooms(teTiles);
+
+        player = new Player(teTiles, seed);
+
+        return teTiles;
     }
 
-//    public static void quitAndSaving() {
-//        try (ObjectOutput oos = new ObjectOutputStream(new FileOutputStream("byog/Core/data/World.ser"))) {
-//            oos.writeObject(roomsAndTunnels);
-//            oos.writeObject(generator);
-//            oos.writeObject(player);
-//        } catch (Exception e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
-//
-//    public static TETile[][] load() {
-//        try (ObjectInput ois = new ObjectInputStream(new FileInputStream("byog/Core/data/World.ser"))) {
-//            roomsAndTunnels = (List<Room>) ois.readObject();
-//            generator = (RoomGenerator) ois.readObject();
-//            player = (Player) ois.readObject();
-//            world = reset();
-//            player.drawOnWorld(world);
-//            return world;
-//        } catch (Exception e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
+    public void reset() {
+        Room.toDrawOn(teTiles, roomsAndTunnels);
+        teTiles[Outdoor.x][Outdoor.y] = Tileset.UNLOCKED_DOOR;
+    }
 
-    public static void movePlayer(TETile[][] world) {
-        player.move(world, keyboardMove());
+    public void resetLoad() {
+        teTiles = new TETile[width][height];
+        for (int x = 0; x < width; x += 1) {
+            for (int y = 0; y < height; y += 1) {
+                teTiles[x][y] = Tileset.NOTHING;
+            }
+        }
+        Room.toDrawOn(teTiles, roomsAndTunnels);
+        teTiles[Outdoor.x][Outdoor.y] = Tileset.UNLOCKED_DOOR;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("World {")
+                .append("\n  width: ").append(width)
+                .append("\n  height: ").append(height)
+                .append("\n  roomsAndTunnels: ").append(roomsAndTunnels)
+                .append("\n  generator: ").append(generator)
+                .append("\n  player: ").append(player)
+                .append("\n}");
+
+        return sb.toString();
     }
 
 }

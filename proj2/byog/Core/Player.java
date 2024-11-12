@@ -38,14 +38,14 @@ public class Player implements Serializable {
         world[x][y] = Tileset.PLAYER;
     }
 
-    public void move(TETile[][] world, Toward direction) {
+    public void move(World world, Toward direction) {
         int newX = x + direction.x;
         int newY = y + direction.y;
-        if (world[newX][newY] == Tileset.FLOOR) {
-            World.reset();
+        if (world.teTiles[newX][newY] == Tileset.FLOOR) {
+            world.reset();
             x = newX;
             y = newY;
-            drawOnWorld(world);
+            drawOnWorld(world.teTiles);
         }
     }
 }

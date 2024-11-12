@@ -38,7 +38,7 @@ public class RoomGenerator implements Serializable {
             Room newRoom = new Room(roomX, roomY, roomWidth, roomHeight, world);
 
             if (newRoom.ifValid(world) && !isOverlapping(newRoom, rooms)) {
-                //newRoom.RoomOf(world); useless
+                //newRoom.RoomOf(teTiles); useless
                 newRoom.toDrawOn(world);
                 rooms.add(newRoom);
 
