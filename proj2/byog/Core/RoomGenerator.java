@@ -49,7 +49,7 @@ public class RoomGenerator implements Serializable {
                 i -= 1;
             }
         }
-        generateRandomOutdoor(world);
+//        generateRandomOutdoor(world);
         rooms.addAll(tunnels);
         return rooms;
     }
@@ -92,21 +92,21 @@ public class RoomGenerator implements Serializable {
         return hallway;
     }
 
-    private void generateRandomOutdoor(TETile[][] world) {
-        boolean hasOutdoor = false;
-        int x = random.nextInt(world.length);
-        int y = random.nextInt(world[0].length);
-        while (world[x][y] != Tileset.WALL) {
-            if (random.nextBoolean()) {
-                x = (x + random.nextInt(world.length)) % world.length;
-            } else {
-                y = (y + random.nextInt(world[0].length)) % world[0].length;
-            }
-        }
-        if (world[x][y] == Tileset.WALL) {
-            world[x][y] = Tileset.UNLOCKED_DOOR;
-            Outdoor.x = x;
-            Outdoor.y = y;
-        }
-    }
+//    private void generateRandomOutdoor(TETile[][] world) {
+//        boolean hasOutdoor = false;
+//        int x = random.nextInt(world.length);
+//        int y = random.nextInt(world[0].length);
+//        while (world[x][y] != Tileset.WALL) {
+//            if (random.nextBoolean()) {
+//                x = (x + random.nextInt(world.length)) % world.length;
+//            } else {
+//                y = (y + random.nextInt(world[0].length)) % world[0].length;
+//            }
+//        }
+//        if (world[x][y] == Tileset.WALL) {
+//            world[x][y] = Tileset.UNLOCKED_DOOR;
+//            Outdoor.x = x;
+//            Outdoor.y = y;
+//        }
+//    }
 }
