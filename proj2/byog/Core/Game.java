@@ -7,6 +7,7 @@ import edu.princeton.cs.introcs.StdDraw;
 import java.awt.Color;
 import java.awt.Font;
 import java.io.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Game {
     TERenderer ter = new TERenderer();
@@ -15,8 +16,11 @@ public class Game {
     public static final int HEIGHT = 30;
     private static final int TILE_SIZE = 16;
     public long SEED = 0L;
-    private static boolean isPlaying = false;
+    private boolean isPlaying = false;
     private World world;
+    private String COMMAND;
+    private boolean hasCommand = false;
+    private boolean needToLoad = false;
 
     public void main(String[] args) {
         if (args.length != 0) {
@@ -29,13 +33,13 @@ public class Game {
      */
     public void playWithKeyboard() {
         displayMainMenu();
-        SEED = stringAnalise(keyboardInput());
+        stringAnalysis(keyboardInput());
 
-        if (SEED >= 0) {
+        if (needToLoad) {
+            load();
+        } else {
             world = new World(WIDTH, HEIGHT, SEED);
             isPlaying = true;
-        } else if (SEED == -2){
-            load();
         }
 
 //        player = new Player(teTiles, SEED);
@@ -59,8 +63,16 @@ public class Game {
         // and return a 2D tile representation of the teTiles that would have been
         // drawn if the same inputs had been given to playWithKeyboard().
 
-        SEED = stringAnalise(input);
-        world = new World(WIDTH, HEIGHT, SEED);
+        stringAnalysis(input);
+        if (needToLoad) {
+            load();
+        } else {
+            world = new World(WIDTH, HEIGHT, SEED);
+            isPlaying = true;
+        }
+        if (hasCommand) {
+            useCommand();
+        }
         return world.teTiles;
     }
 
@@ -83,6 +95,40 @@ public class Game {
 
     public void movePlayer() {
         world.player.move(world, keyboardMove());
+    }
+
+    public void movePlayer(Toward toward) {
+        world.player.move(world, toward);
+    }
+
+    public void useCommand() {
+        for (int i = 0; i < COMMAND.length(); i++) {
+            if (COMMAND.charAt(i) == 'Q') {
+                quitAndSaving();
+            }
+            // world has been initialised
+            switch (COMMAND.charAt(i)) {
+                case 'W':
+                case 'w':
+                    movePlayer(Toward.W);
+                    break;
+                case 'S':
+                case 's':
+                    movePlayer(Toward.S);
+                    break;
+                case 'A':
+                case 'a':
+                    movePlayer(Toward.A);
+                    break;
+                case 'D':
+                case 'd':
+                    movePlayer(Toward.D);
+                    break;
+                default:
+                    movePlayer(Toward.STAY);
+                    break;
+            }
+        }
     }
 
     public Toward keyboardMove() {
@@ -111,7 +157,6 @@ public class Game {
                                 if (input == 'Q' || input == 'q') {
                                     System.out.println("成功保存退出");
                                     quitAndSaving();  // 保存并退出
-                                    isPlaying = false;
                                     return Toward.STAY;  // 退出循环后返回一个值
                                 }
                             }
@@ -125,38 +170,41 @@ public class Game {
         }
     }
 
-    public  void quitAndSaving() {
+    public void quitAndSaving() {
         try (ObjectOutput oos = new ObjectOutputStream(new FileOutputStream("byog/Core/data/World.ser"))) {
             oos.writeObject(world);
+            isPlaying = false;
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    public  void load() {
+    public void load() {
         try (ObjectInput ois = new ObjectInputStream(new FileInputStream("byog/Core/data/World.ser"))) {
             world = (World) ois.readObject();
             System.out.println(world);
             world.resetLoad();
+            isPlaying = true;
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    private static String cursorPointing(TETile[][] world) {
+    private String cursorPointing(TETile[][] world) {
         double x = StdDraw.mouseX();
         double y = StdDraw.mouseY();
         int xPos = (int) x;
         int yPos = (int) y;
         return world[xPos][yPos].description();
     }
-    private static String cursorPointing() {
+
+    private String cursorPointing() {
         double x = StdDraw.mouseX();
         double y = StdDraw.mouseY();
         return "x: " + String.valueOf(x) + " y: " + String.valueOf(x);
     }
 
-    private static void displayGameUI(TETile[][] world) {
+    private void displayGameUI(TETile[][] world) {
         StdDraw.setFont(new Font("Monaco", Font.BOLD, 15));
         StdDraw.setPenColor(Color.WHITE);
         StdDraw.text(10, HEIGHT - 2, cursorPointing(world));
@@ -164,7 +212,7 @@ public class Game {
         StdDraw.setFont(new Font("Monaco", Font.BOLD, 20));
     }
 
-    private static void displayMainMenu() {
+    private void displayMainMenu() {
         int midWidth = WIDTH / 2;
         int midHeight = HEIGHT / 2;
         StdDraw.setCanvasSize(WIDTH * TILE_SIZE, HEIGHT * TILE_SIZE);
@@ -186,35 +234,85 @@ public class Game {
         StdDraw.show();
     }
 
-    private static long stringAnalise(String input) {
-        if (input.equals("l")
-                || input.equals("L")
-                && isPlaying) {
-            return -2;
+    private void stringAnalysis(String input) {
+        // Handle load command
+        if (input.equalsIgnoreCase("l")) {
+            needToLoad = true;
+            return;
         }
-//        boolean startNew = false;
-        if (input.length() < 3) {
-            return -1;
+
+        long seed = -1;
+        StringBuilder seedAndCommand = new StringBuilder();
+        AtomicInteger index = new AtomicInteger(1);
+
+        seedAndCommand.append(seedAnalysis(input, index));
+
+        seedAndCommand.append(commandAnalysis(input, index));
+
+        SEED = Long.parseLong(seedAndCommand.toString().split(" ")[0]);
+
+        if (hasCommand) {
+            COMMAND = seedAndCommand.toString().split(" ")[1];
         }
-        char c = input.charAt(0);
-        if (c == 'N' || c == 'n') {
-            StringBuilder seed = new StringBuilder();
-            int index = 1;
-            while (index < input.length()
-                    && input.charAt(index) >= '0'
-                    && input.charAt(index) <= '9') {
-                seed.append(input.charAt(index));
-                index += 1;
-            }
-            if (input.charAt(index) == 'S' || input.charAt(index) == 's') {
-                return Long.parseLong(seed.toString());
-            }
-        }
-        return -1;
     }
 
+    private StringBuilder commandAnalysis(String input, AtomicInteger index) {
+        StringBuilder commandBuilder = new StringBuilder();
+        while (index.get() < input.length()) {
+            char command = input.charAt(index.get());
+            hasCommand = true;
+            switch (command) {
+                case 'W':
+                case 'w':
+                    commandBuilder.append("W");
+                    break;
+                case 'S':
+                case 's':
+                    commandBuilder.append("S");
+                    break;
+                case 'A':
+                case 'a':
+                    commandBuilder.append("A");
+                    break;
+                case 'D':
+                case 'd':
+                    commandBuilder.append("D");
+                    break;
+                case ':':
+                    if (index.get() + 1 < input.length() && (input.charAt(index.get() + 1) == 'Q' || input.charAt(index.get() + 1) == 'q')) {
+                        commandBuilder.append("Q");
+                    }
+                    break;
+                default:
+                    index.addAndGet(1);
+                    break;
+            }
+            index.addAndGet(1);
+        }
 
-    private static String keyboardInput() {
+        return commandBuilder;
+    }
+
+    private StringBuilder seedAnalysis(String input, AtomicInteger index) {
+        StringBuilder seedBuilder = new StringBuilder();
+
+        // Parse the initial seed if the input starts with 'N' or 'n'
+        if (input.charAt(0) == 'N' || input.charAt(0) == 'n') {
+            // Extract numerical seed value
+            while (index.get() < input.length() && Character.isDigit(input.charAt(index.get()))) {
+                seedBuilder.append(input.charAt(index.get()));
+                index.addAndGet(1);
+            }
+
+            if (index.get() < input.length() && (input.charAt(index.get()) == 'S' || input.charAt(index.get()) == 's')) {
+                index.addAndGet(1); // Skip 'S' or 's' after the seed
+                seedBuilder.append(" ");
+            }
+        }
+        return seedBuilder;
+    }
+
+    private String keyboardInput() {
         StringBuilder command = new StringBuilder();
         char input;
         while (true) {
