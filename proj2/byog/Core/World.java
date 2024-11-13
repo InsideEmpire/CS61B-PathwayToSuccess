@@ -9,8 +9,6 @@ import java.util.List;
 //import static byog.Core.Game.keyboardMove;
 
 public class World implements Serializable {
-    @Serial
-    private static final long serialVersionUID = 1L;
     int width;
     int height;
     long seed;

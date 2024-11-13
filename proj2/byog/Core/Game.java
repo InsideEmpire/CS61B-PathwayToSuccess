@@ -235,15 +235,19 @@ public class Game {
     }
 
     private void stringAnalysis(String input) {
+        long seed = -1;
+        StringBuilder seedAndCommand = new StringBuilder();
+        AtomicInteger index = new AtomicInteger(0);
         // Handle load command
-        if (input.equalsIgnoreCase("l")) {
+        if (input.toLowerCase().contains("l")) {
             needToLoad = true;
+            if (input.length() > 1) {
+                index.addAndGet(1);
+                COMMAND = commandAnalysis(input, index).toString();
+            }
             return;
         }
 
-        long seed = -1;
-        StringBuilder seedAndCommand = new StringBuilder();
-        AtomicInteger index = new AtomicInteger(1);
 
         seedAndCommand.append(seedAnalysis(input, index));
 
@@ -295,7 +299,7 @@ public class Game {
 
     private StringBuilder seedAnalysis(String input, AtomicInteger index) {
         StringBuilder seedBuilder = new StringBuilder();
-
+        index.addAndGet(1);
         // Parse the initial seed if the input starts with 'N' or 'n'
         if (input.charAt(0) == 'N' || input.charAt(0) == 'n') {
             // Extract numerical seed value
