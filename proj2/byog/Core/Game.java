@@ -7,6 +7,7 @@ import edu.princeton.cs.introcs.StdDraw;
 import java.awt.Color;
 import java.awt.Font;
 import java.io.*;
+
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Game {
@@ -15,18 +16,12 @@ public class Game {
     public static final int WIDTH = 80;
     public static final int HEIGHT = 30;
     private static final int TILE_SIZE = 16;
-    public long SEED = 0L;
+    private long SEED = 0L;
     private boolean isPlaying = false;
     private World world;
     private String COMMAND;
     private boolean hasCommand = false;
     private boolean needToLoad = false;
-
-    public void main(String[] args) {
-        if (args.length != 0) {
-            TETile[][] world = playWithInputString(args[0]);
-        }
-    }
 
     /**
      * Method used for playing a fresh game. The game should start from the main menu.
@@ -60,8 +55,6 @@ public class Game {
      * @return the 2D TETile[][] representing the state of the teTiles
      */
     public TETile[][] playWithInputString(String input) {
-        // and return a 2D tile representation of the teTiles that would have been
-        // drawn if the same inputs had been given to playWithKeyboard().
 
         stringAnalysis(input);
         if (needToLoad) {
@@ -171,24 +164,33 @@ public class Game {
     }
 
     public void quitAndSaving() {
-        try (ObjectOutput oos = new ObjectOutputStream(new FileOutputStream("World.ser"))) {
+        // 获取当前工作目录
+        String currentDir = System.getProperty("user.dir");
+        String filePath = currentDir + "/World.ser";  // 在当前工作目录下保存文件
+
+        try (ObjectOutput oos = new ObjectOutputStream(new FileOutputStream(filePath))) {
             oos.writeObject(world);
             isPlaying = false;
-        } catch (Exception e) {
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
     public void load() {
-        try (ObjectInput ois = new ObjectInputStream(new FileInputStream("World.ser"))) {
+        // 获取当前工作目录
+        String currentDir = System.getProperty("user.dir");
+        String filePath = currentDir + "/World.ser";  // 读取当前工作目录中的文件
+
+        try (ObjectInput ois = new ObjectInputStream(new FileInputStream(filePath))) {
             world = (World) ois.readObject();
             System.out.println(world);
             world.resetLoad();
             isPlaying = true;
-        } catch (Exception e) {
+        } catch (ClassNotFoundException | IOException e) {
             throw new RuntimeException(e);
         }
     }
+
 
     private String cursorPointing(TETile[][] world) {
         double x = StdDraw.mouseX();

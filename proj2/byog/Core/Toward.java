@@ -8,6 +8,6 @@ public enum Toward {
         this.y = y;
     }
 
-    public final int x;
-    public final int y;
+    private final int x;
+    private final int y;
 }

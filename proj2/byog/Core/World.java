@@ -3,20 +3,20 @@ package byog.Core;
 import byog.TileEngine.TETile;
 import byog.TileEngine.Tileset;
 
-import java.io.*;
+import java.io.Serializable;
 import java.util.List;
 
 //import static byog.Core.Game.keyboardMove;
 
 public class World implements Serializable {
-    int width;
-    int height;
-    long seed;
-    List<Room> roomsAndTunnels;
-    transient TETile[][] teTiles;
-    RoomGenerator generator;
-    Player player;
-    Outdoor outdoor;
+    private int width;
+    private int height;
+    private long seed;
+    private List<Room> roomsAndTunnels;
+    public transient TETile[][] teTiles;
+    private RoomGenerator generator;
+    public Player player;
+    private Outdoor outdoor;
 
     World(int width, int height, long seed) {
 
@@ -42,6 +42,7 @@ public class World implements Serializable {
         outdoor.generateRandomOutdoor(teTiles);
     }
 
+    /*
     public TETile[][] initialise(int width, int height, long seed) {
 
         // initialize the tile rendering engine with a window of size WIDTH x HEIGHT
@@ -61,6 +62,7 @@ public class World implements Serializable {
 
         return teTiles;
     }
+     */
 
     public void reset() {
         Room.toDrawOn(teTiles, roomsAndTunnels);

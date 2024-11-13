@@ -7,8 +7,8 @@ import java.io.Serializable;
 import java.util.Random;
 
 public class Outdoor implements Serializable {
-    int x;
-    int y;
+    public int x;
+    public int y;
     private Random random;
 
     Outdoor(long seed) {
@@ -16,8 +16,8 @@ public class Outdoor implements Serializable {
     }
 
     void generateRandomOutdoor(TETile[][] world) {
-        int x = random.nextInt(world.length);
-        int y = random.nextInt(world[0].length);
+        x = random.nextInt(world.length);
+        y = random.nextInt(world[0].length);
         while (world[x][y] != Tileset.WALL) {
             if (random.nextBoolean()) {
                 x = (x + random.nextInt(world.length)) % world.length;
@@ -27,8 +27,6 @@ public class Outdoor implements Serializable {
         }
         if (world[x][y] == Tileset.WALL) {
             world[x][y] = Tileset.UNLOCKED_DOOR;
-            this.x = x;
-            this.y = y;
         }
     }
 
