@@ -171,7 +171,7 @@ public class Game {
     }
 
     public void quitAndSaving() {
-        try (ObjectOutput oos = new ObjectOutputStream(new FileOutputStream("byog/Core/data/World.ser"))) {
+        try (ObjectOutput oos = new ObjectOutputStream(new FileOutputStream("World.ser"))) {
             oos.writeObject(world);
             isPlaying = false;
         } catch (Exception e) {
@@ -180,7 +180,7 @@ public class Game {
     }
 
     public void load() {
-        try (ObjectInput ois = new ObjectInputStream(new FileInputStream("byog/Core/data/World.ser"))) {
+        try (ObjectInput ois = new ObjectInputStream(new FileInputStream("World.ser"))) {
             world = (World) ois.readObject();
             System.out.println(world);
             world.resetLoad();
