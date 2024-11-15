@@ -76,10 +76,10 @@ public class Game {
 
     public void movePlayer(Toward toward) {
         // TODO: java.lang.NullPointerException
-        try {
+        if (world == null) {
+            throw new RuntimeException(new NullPointerException("world is null"));
+        } else {
             world.move(toward);
-        } catch (NullPointerException e) {
-            throw new RuntimeException(e);
         }
     }
 
