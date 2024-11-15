@@ -139,7 +139,6 @@ public class Game {
                                 if (input == 'Q' || input == 'q') {
                                     System.out.println("成功保存退出");
                                     quitAndSaving();  // 保存并退出
-                                    isPlaying = false;
                                 }
                             }
                         }
@@ -157,6 +156,7 @@ public class Game {
             java.io.ObjectOutputStream out = new java.io.ObjectOutputStream(new java.io.FileOutputStream("savefile.txt"));
             out.writeObject(world);
             out.close();
+            isPlaying = false;
         } catch (java.io.IOException e) {
             e.printStackTrace();
         }
