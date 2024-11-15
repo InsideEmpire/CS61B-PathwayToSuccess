@@ -162,6 +162,10 @@ public class Game {
                      new java.io.ObjectOutputStream(new java.io.FileOutputStream(filePath))) {
             oos.writeObject(world);
             isPlaying = false;
+        } catch (SecurityException e) {
+            // 处理安全异常，例如记录错误日志或使用默认目录
+            System.err.println("无法访问工作目录: " + e.getMessage());
+            throw new RuntimeException(e);
         } catch (java.io.IOException e) {
             throw new RuntimeException(e);
         }
@@ -184,6 +188,10 @@ public class Game {
             System.out.println(world);
             world.resetLoad();
             isPlaying = true;
+        } catch (SecurityException e) {
+            // 处理安全异常，例如记录错误日志或使用默认目录
+            System.err.println("无法访问工作目录: " + e.getMessage());
+            throw new RuntimeException(e);
         } catch (ClassNotFoundException | java.io.IOException e) {
             throw new RuntimeException(e);
         }
