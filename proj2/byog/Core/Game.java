@@ -189,7 +189,7 @@ public class Game {
     private String cursorPointing() {
         double x = StdDraw.mouseX();
         double y = StdDraw.mouseY();
-        return "x: " + String.valueOf(x) + " y: " + String.valueOf(x);
+        return "x: " + String.valueOf(x) + " y: " + String.valueOf(y);
     }
 
     private void displayGameUI() {
