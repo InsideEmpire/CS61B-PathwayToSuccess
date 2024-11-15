@@ -17,7 +17,7 @@ public class RoomGenerator implements Serializable {
         this.WIDTH = width;
         this.HEIGHT = height;
         this.random = new Random(seed);
-        this.maxRooms = RandomUtils.uniform(random, 10, 15);
+        this.maxRooms = RandomUtils.uniform(random, 20, 25);
     }
 
     public List<Room> generateRooms(TETile[][] world) {
@@ -25,8 +25,8 @@ public class RoomGenerator implements Serializable {
         List<Room> tunnels = new ArrayList<>();
 
         for (int i = 0; i < maxRooms; i++) {
-            int roomWidth = RandomUtils.uniform(random, 4, 10); // 房间宽度范围
-            int roomHeight = RandomUtils.uniform(random, 4, 10); // 房间高度范围
+            int roomWidth = RandomUtils.uniform(random, 5, 9); // 房间宽度范围
+            int roomHeight = RandomUtils.uniform(random, 5, 9); // 房间高度范围
             int roomX = RandomUtils.uniform(random, 0, WIDTH - roomWidth - 1);
             int roomY = RandomUtils.uniform(random, 0, HEIGHT - roomHeight - 1);
 

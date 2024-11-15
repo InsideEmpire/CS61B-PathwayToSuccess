@@ -13,7 +13,7 @@ public class Game {
     TERenderer ter = new TERenderer();
     /* Feel free to change the width and height. */
     public static final int WIDTH = 80;
-    public static final int HEIGHT = 30;
+    public static final int HEIGHT = 40;
     private static final int TILE_SIZE = 16;
     private long SEED = 0L;
     private boolean isPlaying = false;
@@ -35,7 +35,7 @@ public class Game {
         }
 
 //        player = new Player(teTiles, SEED);
-        playing(world.getTeTiles());
+        playing();
     }
 
     public TETile[][] playWithInputString(String input) {
@@ -53,7 +53,7 @@ public class Game {
         return world.getTeTiles();
     }
 
-    public void playing(TETile[][] teTiles) {
+    public void playing() {
         ter = new TERenderer();
         ter.initialize(WIDTH, HEIGHT);
         while (isPlaying) {
