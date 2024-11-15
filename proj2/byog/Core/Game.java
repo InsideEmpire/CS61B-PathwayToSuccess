@@ -158,14 +158,17 @@ public class Game {
 
         String filePath = currentDir + "/World.ser";  // 在当前工作目录下保存文件
 
-        try (java.io.ObjectOutput oos =
-                     new java.io.ObjectOutputStream(new java.io.FileOutputStream(filePath))) {
+        try {
+            java.io.FileOutputStream fos = new java.io.FileOutputStream(filePath);
+            java.io.ObjectOutput oos = new java.io.ObjectOutputStream(fos);
             oos.writeObject(world);
             isPlaying = false;
+            oos.close();
+            fos.close();
         } catch (SecurityException e) {
-            // 处理安全异常，例如记录错误日志或使用默认目录
-            System.err.println("无法访问工作目录: " + e.getMessage());
-            throw new RuntimeException(e);
+            System.err.println("安全异常: " + e.getMessage());
+        } catch (java.io.FileNotFoundException e) {
+            System.err.println("文件未找到: " + e.getMessage());
         } catch (java.io.IOException e) {
             throw new RuntimeException(e);
         }
@@ -182,16 +185,19 @@ public class Game {
         }
         String filePath = currentDir + "/World.ser";  // 读取当前工作目录中的文件
 
-        try (java.io.ObjectInput ois =
-                     new java.io.ObjectInputStream(new java.io.FileInputStream(filePath))) {
+        try {
+            java.io.FileInputStream fis = new java.io.FileInputStream(filePath);
+            java.io.ObjectInput ois = new java.io.ObjectInputStream(fis);
             world = (World) ois.readObject();
             System.out.println(world);
             world.resetLoad();
             isPlaying = true;
+            ois.close();
+            fis.close();
         } catch (SecurityException e) {
-            // 处理安全异常，例如记录错误日志或使用默认目录
-            System.err.println("无法访问工作目录: " + e.getMessage());
-            throw new RuntimeException(e);
+            System.err.println("安全异常: " + e.getMessage());
+        } catch (java.io.FileNotFoundException e) {
+            System.err.println("文件未找到: " + e.getMessage());
         } catch (ClassNotFoundException | java.io.IOException e) {
             throw new RuntimeException(e);
         }
