@@ -58,7 +58,7 @@ public class Game {
         ter.initialize(WIDTH, HEIGHT);
         while (isPlaying) {
             ter.renderFrame(world.getTeTiles());
-            displayGameUI(world.getTeTiles());
+            displayGameUI();
             movePlayer();
         }
         if (!isPlaying) {
@@ -190,12 +190,12 @@ public class Game {
     }
 
 
-    private String cursorPointing(TETile[][] world) {
+    private String cursorPointing(TETile[][] teTiles) {
         double x = StdDraw.mouseX();
         double y = StdDraw.mouseY();
         int xPos = (int) x;
         int yPos = (int) y;
-        return world[xPos][yPos].description();
+        return teTiles[xPos][yPos].description();
     }
 
     private String cursorPointing() {
@@ -204,10 +204,10 @@ public class Game {
         return "x: " + String.valueOf(x) + " y: " + String.valueOf(x);
     }
 
-    private void displayGameUI(TETile[][] world) {
+    private void displayGameUI() {
         StdDraw.setFont(new Font("Monaco", Font.BOLD, 15));
         StdDraw.setPenColor(Color.WHITE);
-        StdDraw.text(10, HEIGHT - 2, cursorPointing(world));
+        StdDraw.text(10, HEIGHT - 2, cursorPointing(world.getTeTiles()));
         StdDraw.show();
         StdDraw.setFont(new Font("Monaco", Font.BOLD, 20));
     }
@@ -283,9 +283,9 @@ public class Game {
                     commandBuilder.append("D");
                     break;
                 case ':':
-                    if (index.get() + 1 < input.length() &&
-                            (input.charAt(index.get() + 1) == 'Q' ||
-                                    input.charAt(index.get() + 1) == 'q')) {
+                    if (index.get() + 1 < input.length()
+                            && (input.charAt(index.get() + 1) == 'Q'
+                            || input.charAt(index.get() + 1) == 'q')) {
                         commandBuilder.append("Q");
                     }
                     break;
@@ -310,9 +310,9 @@ public class Game {
                 index.addAndGet(1);
             }
 
-            if (index.get() < input.length() &&
-                    (input.charAt(index.get()) == 'S' ||
-                            input.charAt(index.get()) == 's')) {
+            if (index.get() < input.length()
+                    && (input.charAt(index.get()) == 'S'
+                    || input.charAt(index.get()) == 's')) {
                 index.addAndGet(1); // Skip 'S' or 's' after the seed
                 seedBuilder.append(" ");
             }
