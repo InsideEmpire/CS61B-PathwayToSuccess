@@ -50,28 +50,6 @@ public class World implements Serializable {
         outdoor.generateRandomOutdoor(teTiles);
     }
 
-    /*
-    public TETile[][] initialise(int width, int height, long seed) {
-
-        // initialize the tile rendering engine with a window of size WIDTH x HEIGHT
-
-        // initialize tiles
-        teTiles = new TETile[width][height];
-        for (int x = 0; x < width; x += 1) {
-            for (int y = 0; y < height; y += 1) {
-                teTiles[x][y] = Tileset.NOTHING;
-            }
-        }
-
-        generator = new RoomGenerator(width, height, seed);
-        roomsAndTunnels = generator.generateRooms(teTiles);
-
-        player = new Player(teTiles, seed);
-
-        return teTiles;
-    }
-     */
-
     public void reset() {
         Room.toDrawOn(teTiles, roomsAndTunnels);
         teTiles[outdoor.getX()][outdoor.getY()] = Tileset.UNLOCKED_DOOR;
@@ -101,6 +79,10 @@ public class World implements Serializable {
                 .append("\n}");
 
         return sb.toString();
+    }
+
+    public void move(Toward direction) {
+        player.move(this, direction);
     }
 
 }

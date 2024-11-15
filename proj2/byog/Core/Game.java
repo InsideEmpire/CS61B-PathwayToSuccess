@@ -71,12 +71,16 @@ public class Game {
 
 
     public void movePlayer() {
-        world.getPlayer().move(world, keyboardMove());
+        world.move(keyboardMove());
     }
 
     public void movePlayer(Toward toward) {
         // TODO: java.lang.NullPointerException
-        world.getPlayer().move(world, toward);
+        try {
+            world.move(toward);
+        } catch (NullPointerException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void useCommand() {
