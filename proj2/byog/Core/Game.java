@@ -75,7 +75,6 @@ public class Game {
     }
 
     public void movePlayer(Toward toward) {
-        // TODO: java.lang.NullPointerException在此处抛出异常
         if (world == null) {
             throw new RuntimeException(new NullPointerException("world is null"));
         } else {
@@ -153,7 +152,8 @@ public class Game {
 
     public void quitAndSaving() {
         try {
-            java.io.ObjectOutputStream out = new java.io.ObjectOutputStream(new java.io.FileOutputStream("savefile.txt"));
+            java.io.ObjectOutputStream out =
+                    new java.io.ObjectOutputStream(new java.io.FileOutputStream("savefile.txt"));
             out.writeObject(world);
             out.close();
             isPlaying = false;
@@ -164,9 +164,11 @@ public class Game {
 
     public void load() {
         try {
-            java.io.ObjectInputStream in = new java.io.ObjectInputStream(new java.io.FileInputStream("savefile.txt"));
+            java.io.ObjectInputStream in =
+                    new java.io.ObjectInputStream(new java.io.FileInputStream("savefile.txt"));
             world = (World) in.readObject();
             world.resetLoad();
+            isPlaying = true;
             in.close();
         } catch (java.io.IOException e) {
             e.printStackTrace();
