@@ -13,10 +13,18 @@ public class World implements Serializable {
     private int height;
     private long seed;
     private List<Room> roomsAndTunnels;
-    public transient TETile[][] teTiles;
+    private transient TETile[][] teTiles;
     private RoomGenerator generator;
-    public Player player;
+    private Player player;
     private Outdoor outdoor;
+
+    public Player getPlayer() {
+        return player;
+    }
+
+    public TETile[][] getTeTiles() {
+        return teTiles;
+    }
 
     World(int width, int height, long seed) {
 
@@ -66,7 +74,7 @@ public class World implements Serializable {
 
     public void reset() {
         Room.toDrawOn(teTiles, roomsAndTunnels);
-        teTiles[outdoor.x][outdoor.y] = Tileset.UNLOCKED_DOOR;
+        teTiles[outdoor.getX()][outdoor.getY()] = Tileset.UNLOCKED_DOOR;
     }
 
     public void resetLoad() {
@@ -77,7 +85,7 @@ public class World implements Serializable {
             }
         }
         Room.toDrawOn(teTiles, roomsAndTunnels);
-        teTiles[outdoor.x][outdoor.y] = Tileset.UNLOCKED_DOOR;
+        teTiles[outdoor.getX()][outdoor.getY()] = Tileset.UNLOCKED_DOOR;
     }
 
     @Override

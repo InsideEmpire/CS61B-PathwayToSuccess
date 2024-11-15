@@ -6,7 +6,6 @@ import edu.princeton.cs.introcs.StdDraw;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.io.*;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -23,9 +22,7 @@ public class Game {
     private boolean hasCommand = false;
     private boolean needToLoad = false;
 
-    /**
-     * Method used for playing a fresh game. The game should start from the main menu.
-     */
+
     public void playWithKeyboard() {
         displayMainMenu();
         stringAnalysis(keyboardInput());
@@ -38,22 +35,9 @@ public class Game {
         }
 
 //        player = new Player(teTiles, SEED);
-        playing(world.teTiles);
+        playing(world.getTeTiles());
     }
 
-    /**
-     * Method used for autograding and testing the game code. The input string will be a series
-     * of characters (for example, "n123sswwdasdassadwas", "n123sss:q", "lwww". The game should
-     * behave exactly as if the user typed these characters into the game after playing
-     * playWithKeyboard. If the string ends in ":q", the same teTiles should be returned as if the
-     * string did not end with q. For example "n123sss" and "n123sss:q" should return the same
-     * teTiles. However, the behavior is slightly different. After playing with "n123sss:q", the game
-     * should save, and thus if we then called playWithInputString with the string "l", we'd expect
-     * to get the exact same teTiles back again, since this corresponds to loading the saved game.
-     *
-     * @param input the input string to feed to your program
-     * @return the 2D TETile[][] representing the state of the teTiles
-     */
     public TETile[][] playWithInputString(String input) {
 
         stringAnalysis(input);
@@ -66,15 +50,15 @@ public class Game {
         if (hasCommand) {
             useCommand();
         }
-        return world.teTiles;
+        return world.getTeTiles();
     }
 
     public void playing(TETile[][] teTiles) {
         ter = new TERenderer();
         ter.initialize(WIDTH, HEIGHT);
         while (isPlaying) {
-            ter.renderFrame(world.teTiles);
-            displayGameUI(world.teTiles);
+            ter.renderFrame(world.getTeTiles());
+            displayGameUI(world.getTeTiles());
             movePlayer();
         }
         if (!isPlaying) {
@@ -87,11 +71,11 @@ public class Game {
 
 
     public void movePlayer() {
-        world.player.move(world, keyboardMove());
+        world.getPlayer().move(world, keyboardMove());
     }
 
     public void movePlayer(Toward toward) {
-        world.player.move(world, toward);
+        world.getPlayer().move(world, toward);
     }
 
     public void useCommand() {
@@ -144,17 +128,16 @@ public class Game {
                         return Toward.D;
                     case ':':
                         // 处理 ':' 按键，进行保存并退出
-                        while (true) {
+                        while (isPlaying) {
                             if (StdDraw.hasNextKeyTyped()) {
                                 input = StdDraw.nextKeyTyped();
                                 if (input == 'Q' || input == 'q') {
                                     System.out.println("成功保存退出");
                                     quitAndSaving();  // 保存并退出
-                                    return Toward.STAY;  // 退出循环后返回一个值
                                 }
                             }
                         }
-//                        break;
+                        return Toward.STAY;
                     default:
                         return Toward.STAY;
                 }
@@ -164,29 +147,44 @@ public class Game {
     }
 
     public void quitAndSaving() {
-        // 获取当前工作目录
-        String currentDir = System.getProperty("user.dir");
+        String currentDir = null;
+        try {
+            currentDir = System.getProperty("user.dir");
+        } catch (SecurityException e) {
+            // 处理安全异常，例如记录错误日志或使用默认目录
+            System.err.println("无法访问工作目录: " + e.getMessage());
+            currentDir = ".";  // 使用默认目录
+        }
+
         String filePath = currentDir + "/World.ser";  // 在当前工作目录下保存文件
 
-        try (ObjectOutput oos = new ObjectOutputStream(new FileOutputStream(filePath))) {
+        try (java.io.ObjectOutput oos =
+                     new java.io.ObjectOutputStream(new java.io.FileOutputStream(filePath))) {
             oos.writeObject(world);
             isPlaying = false;
-        } catch (IOException e) {
+        } catch (java.io.IOException e) {
             throw new RuntimeException(e);
         }
     }
 
     public void load() {
-        // 获取当前工作目录
-        String currentDir = System.getProperty("user.dir");
+        String currentDir = null;
+        try {
+            currentDir = System.getProperty("user.dir");
+        } catch (SecurityException e) {
+            // 处理安全异常，例如记录错误日志或使用默认目录
+            System.err.println("无法访问工作目录: " + e.getMessage());
+            currentDir = ".";  // 使用默认目录
+        }
         String filePath = currentDir + "/World.ser";  // 读取当前工作目录中的文件
 
-        try (ObjectInput ois = new ObjectInputStream(new FileInputStream(filePath))) {
+        try (java.io.ObjectInput ois =
+                     new java.io.ObjectInputStream(new java.io.FileInputStream(filePath))) {
             world = (World) ois.readObject();
             System.out.println(world);
             world.resetLoad();
             isPlaying = true;
-        } catch (ClassNotFoundException | IOException e) {
+        } catch (ClassNotFoundException | java.io.IOException e) {
             throw new RuntimeException(e);
         }
     }
@@ -285,7 +283,9 @@ public class Game {
                     commandBuilder.append("D");
                     break;
                 case ':':
-                    if (index.get() + 1 < input.length() && (input.charAt(index.get() + 1) == 'Q' || input.charAt(index.get() + 1) == 'q')) {
+                    if (index.get() + 1 < input.length() &&
+                            (input.charAt(index.get() + 1) == 'Q' ||
+                                    input.charAt(index.get() + 1) == 'q')) {
                         commandBuilder.append("Q");
                     }
                     break;
@@ -310,7 +310,9 @@ public class Game {
                 index.addAndGet(1);
             }
 
-            if (index.get() < input.length() && (input.charAt(index.get()) == 'S' || input.charAt(index.get()) == 's')) {
+            if (index.get() < input.length() &&
+                    (input.charAt(index.get()) == 'S' ||
+                            input.charAt(index.get()) == 's')) {
                 index.addAndGet(1); // Skip 'S' or 's' after the seed
                 seedBuilder.append(" ");
             }

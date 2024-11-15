@@ -7,9 +7,17 @@ import java.io.Serializable;
 import java.util.Random;
 
 public class Outdoor implements Serializable {
-    public int x;
-    public int y;
+    private int x;
+    private int y;
     private Random random;
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
 
     Outdoor(long seed) {
         this.random = new Random(seed);

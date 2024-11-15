@@ -38,11 +38,11 @@ public class Player implements Serializable {
     public void move(World world, Toward direction) {
         int newX = x + direction.getX();
         int newY = y + direction.getY();
-        if (world.teTiles[newX][newY] == Tileset.FLOOR) {
+        if (world.getTeTiles()[newX][newY] == Tileset.FLOOR) {
             world.reset();
             x = newX;
             y = newY;
-            drawOnWorld(world.teTiles);
+            drawOnWorld(world.getTeTiles());
         }
     }
 }
