@@ -139,6 +139,7 @@ public class Game {
                                 if (input == 'Q' || input == 'q') {
                                     System.out.println("成功保存退出");
                                     quitAndSaving();  // 保存并退出
+                                    isPlaying = false;
                                 }
                             }
                         }
@@ -152,70 +153,25 @@ public class Game {
     }
 
     public void quitAndSaving() {
-        String currentDir = null;
         try {
-            currentDir = System.getProperty("user.dir");
-        } catch (SecurityException e) {
-            // 处理安全异常，例如记录错误日志或使用默认目录
-            System.err.println("无法访问工作目录: " + e.getMessage());
-            currentDir = ".";  // 使用默认目录
-        }
-
-        String filePath = currentDir + "/World.ser";  // 在当前工作目录下保存文件
-
-        try {
-            java.io.FileOutputStream fos = new java.io.FileOutputStream(filePath);
-            java.io.ObjectOutput oos = new java.io.ObjectOutputStream(fos);
-            oos.writeObject(world);
-            isPlaying = false;
-            oos.close();
-            fos.close();
-        } catch (SecurityException e) {
-            System.err.println("安全异常: " + e.getMessage());
-            throw new RuntimeException("安全异常: " + e.getMessage());
-        } catch (java.io.FileNotFoundException e) {
-            System.err.println("文件未找到: " + e.getMessage());
-            throw new RuntimeException("文件未找到: " + e.getMessage());
+            java.io.ObjectOutputStream out = new java.io.ObjectOutputStream(new java.io.FileOutputStream("savefile.txt"));
+            out.writeObject(world);
+            out.close();
         } catch (java.io.IOException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
     }
 
     public void load() {
-        String currentDir = null;
         try {
-            currentDir = System.getProperty("user.dir");
-        } catch (SecurityException e) {
-            // 处理安全异常，例如记录错误日志或使用默认目录
-            System.err.println("无法访问工作目录: " + e.getMessage());
-            currentDir = ".";  // 使用默认目录
-        }
-        String filePath = currentDir + "/World.ser";  // 读取当前工作目录中的文件
-
-        try {
-            java.io.FileInputStream fis = new java.io.FileInputStream(filePath);
-            java.io.ObjectInput ois = new java.io.ObjectInputStream(fis);
-            world = (World) ois.readObject();
-            if (world == null) {
-                // TODO: 为什么在load的时候没有抛出异常？
-                throw new RuntimeException(new NullPointerException("world does not exist"));
-            }
-            System.out.println(world);
+            java.io.ObjectInputStream in = new java.io.ObjectInputStream(new java.io.FileInputStream("savefile.txt"));
+            world = (World) in.readObject();
             world.resetLoad();
-            isPlaying = true;
-            ois.close();
-            fis.close();
-        } catch (ClassNotFoundException e) {
-            System.err.println("类未找到: " + e.getMessage());
-            throw new RuntimeException("类未找到: " + e.getMessage());
-        } catch (SecurityException e) {
-            System.err.println("安全异常: " + e.getMessage());
-            throw new RuntimeException("安全异常: " + e.getMessage());
-        } catch (java.io.FileNotFoundException e) {
-            System.err.println("文件未找到: " + e.getMessage());
-            throw new RuntimeException("文件未找到: " + e.getMessage());
+            in.close();
         } catch (java.io.IOException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
         }
     }
 
