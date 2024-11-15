@@ -205,6 +205,9 @@ public class Game {
             isPlaying = true;
             ois.close();
             fis.close();
+        } catch (ClassNotFoundException e) {
+            System.err.println("类未找到: " + e.getMessage());
+            throw new RuntimeException("类未找到: " + e.getMessage());
         } catch (SecurityException e) {
             System.err.println("安全异常: " + e.getMessage());
             throw new RuntimeException("安全异常: " + e.getMessage());
