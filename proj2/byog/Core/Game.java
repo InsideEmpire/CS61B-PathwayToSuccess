@@ -75,7 +75,7 @@ public class Game {
     }
 
     public void movePlayer(Toward toward) {
-        // TODO: java.lang.NullPointerException
+        // TODO: java.lang.NullPointerException在此处抛出异常
         if (world == null) {
             throw new RuntimeException(new NullPointerException("world is null"));
         } else {
@@ -172,8 +172,10 @@ public class Game {
             fos.close();
         } catch (SecurityException e) {
             System.err.println("安全异常: " + e.getMessage());
+            throw new RuntimeException("安全异常: " + e.getMessage());
         } catch (java.io.FileNotFoundException e) {
             System.err.println("文件未找到: " + e.getMessage());
+            throw new RuntimeException("文件未找到: " + e.getMessage());
         } catch (java.io.IOException e) {
             throw new RuntimeException(e);
         }
@@ -193,13 +195,10 @@ public class Game {
         try {
             java.io.FileInputStream fis = new java.io.FileInputStream(filePath);
             java.io.ObjectInput ois = new java.io.ObjectInputStream(fis);
-            // TODO: load 之后没法正确加载world，出现java.lang.NullPointerException
             world = (World) ois.readObject();
             if (world == null) {
+                // TODO: 为什么在load的时候没有抛出异常？
                 throw new RuntimeException(new NullPointerException("world does not exist"));
-            }
-            if (world.getPlayer() == null) {
-                throw new RuntimeException(new NullPointerException("player does not exist"));
             }
             System.out.println(world);
             world.resetLoad();
@@ -208,9 +207,11 @@ public class Game {
             fis.close();
         } catch (SecurityException e) {
             System.err.println("安全异常: " + e.getMessage());
+            throw new RuntimeException("安全异常: " + e.getMessage());
         } catch (java.io.FileNotFoundException e) {
             System.err.println("文件未找到: " + e.getMessage());
-        } catch (ClassNotFoundException | java.io.IOException e) {
+            throw new RuntimeException("文件未找到: " + e.getMessage());
+        } catch (java.io.IOException e) {
             throw new RuntimeException(e);
         }
     }
