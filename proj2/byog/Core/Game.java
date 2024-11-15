@@ -75,6 +75,7 @@ public class Game {
     }
 
     public void movePlayer(Toward toward) {
+        // TODO: java.lang.NullPointerException
         world.getPlayer().move(world, toward);
     }
 
@@ -188,7 +189,14 @@ public class Game {
         try {
             java.io.FileInputStream fis = new java.io.FileInputStream(filePath);
             java.io.ObjectInput ois = new java.io.ObjectInputStream(fis);
+            // TODO: load 之后没法正确加载world，出现java.lang.NullPointerException
             world = (World) ois.readObject();
+            if (world == null) {
+                throw new RuntimeException(new NullPointerException("world does not exist"));
+            }
+            if (world.getPlayer() == null) {
+                throw new RuntimeException(new NullPointerException("player does not exist"));
+            }
             System.out.println(world);
             world.resetLoad();
             isPlaying = true;
