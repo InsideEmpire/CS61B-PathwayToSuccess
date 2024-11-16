@@ -6,6 +6,12 @@ import byog.TileEngine.Tileset;
 import java.io.Serializable;
 import java.util.Random;
 
+/**
+ * Outdoor.java
+ * This class represents the outdoor exit point in the game.
+ * It includes methods to generate a random outdoor position on the world map.
+ */
+
 public class Outdoor implements Serializable {
     private int x;
     private int y;
