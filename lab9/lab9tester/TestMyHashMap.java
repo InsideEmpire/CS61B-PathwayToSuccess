@@ -5,6 +5,10 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 import lab9.MyHashMap;
 
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+
 /**
  * Tests by Brendan Hu, Spring 2015, revised for 2018 by Josh Hug
  */
@@ -125,6 +129,65 @@ public class TestMyHashMap {
         studentIDs.put("evil alan", 345);
         assertEquals(345, studentIDs.get("evil alan").intValue());
         assertEquals(studentIDs.get("evil alan"), studentIDs.get("alan"));
+    }
+
+    @Test
+    public void testIterator() {
+        MyHashMap<String, Integer> map = new MyHashMap<>();
+        map.put("apple", 1);
+        map.put("banana", 2);
+        map.put("cherry", 3);
+
+        Set<String> keys = new HashSet<>();
+        Iterator<String> iterator = map.iterator();
+        while (iterator.hasNext()) {
+            keys.add(iterator.next());
+        }
+
+        Set<String> expected = new HashSet<>();
+        expected.add("apple");
+        expected.add("banana");
+        expected.add("cherry");
+
+        assertEquals(expected, keys);
+    }
+
+    @Test
+    public void testRemove() {
+        MyHashMap<String, Integer> map = new MyHashMap<>();
+        map.put("apple", 1);
+        map.put("banana", 2);
+
+        assertEquals(1, (int) map.remove("apple")); // Remove existing key
+        assertNull(map.remove("orange")); // Remove non-existent key
+        assertNull(map.get("apple")); // Ensure key is removed
+        assertEquals(2, (int) map.get("banana")); // Ensure other keys are unaffected
+    }
+
+    @Test
+    public void testRemoveWithValue() {
+        MyHashMap<String, Integer> map = new MyHashMap<>();
+        map.put("apple", 1);
+        map.put("banana", 2);
+
+        assertNull(map.remove("apple", 2)); // Value doesn't match
+        assertEquals(1, (int) map.remove("apple", 1)); // Key and value match
+        assertNull(map.get("apple"));
+    }
+
+    @Test
+    public void testKeySet() {
+        MyHashMap<String, Integer> map = new MyHashMap<>();
+        map.put("apple", 1);
+        map.put("banana", 2);
+        map.put("cherry", 3);
+
+        Set<String> expected = new HashSet<>();
+        expected.add("apple");
+        expected.add("banana");
+        expected.add("cherry");
+
+        assertEquals(expected, map.keySet());
     }
 
     public static void main(String[] args) {
