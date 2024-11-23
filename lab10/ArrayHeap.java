@@ -158,6 +158,9 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
      */
     @Override
     public T peek() {
+        if (size == 0) {
+            throw new NullPointerException("Heap is empty");
+        }
         return contents[1].myItem;
     }
 
@@ -172,6 +175,9 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
      */
     @Override
     public T removeMin() {
+        if (size == 0) {
+            throw new NullPointerException("Heap is empty");
+        }
         T item = contents[1].myItem;
         swap(1, size);
         contents[size--] = null;
@@ -201,14 +207,16 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
     @Override
     public void changePriority(T item, double priority) {
         int index = getIndex(item);
-        validateSinkSwimArg(index);
+        if (index == 0) {
+            throw new IllegalArgumentException("Item not found in heap");
+        }
 
         if (contents[index].myPriority < priority) {
             contents[index].myPriority = priority;
-            swim(index);
+            sink(index);
         } else if (contents[index].myPriority > priority) {
             contents[index].myPriority = priority;
-            sink(index);
+            swim(index);
         }
 
     }
