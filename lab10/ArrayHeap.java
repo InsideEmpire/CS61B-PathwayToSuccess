@@ -175,7 +175,9 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
         T item = contents[1].myItem;
         swap(1, size);
         contents[size--] = null;
-        sink(1);
+        if (size > 0) {
+            sink(1);
+        }
         return item;
     }
 
@@ -212,7 +214,7 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
     }
 
     private int getIndex(T item) {
-        for (int i = 0; i <= size; i++) {
+        for (int i = 1; i <= size; i++) {
             if (contents[i].myItem.equals(item)) {
                 return i;
             }
