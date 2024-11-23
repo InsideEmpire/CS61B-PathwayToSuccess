@@ -63,3 +63,5 @@
 ### [proj2 by @stg1205](https://github.com/stg1205/CS61B/tree/master/proj2/byog)
 
 ### [CS 自学指南 Self-Study Guide](https://csdiy.wiki) and [Code](https://github.com/PKUFlyingPig/CS61B) by @PKUFlyingPig
+
+###  The textbook [Algorithms, 4th Edition](https://algs4.cs.princeton.edu/home/) by Robert Sedgewick and Kevin Wayne surveys the most important algorithms and data structures in use today.
