@@ -4,23 +4,23 @@ import edu.princeton.cs.algs4.Queue;
 
 public class Board implements WorldState {
 
-    int[][] tiles;
-    int N;
+    private int[][] tiles;
+    private int size;
     private int hamming = -1; // 初始值为 -1 表示未计算
     private int manhattan = -1;
 
     /**
-     * Constructs a board from an N-by-N array of tiles where
+     * Constructs a board from an size-by-size array of tiles where
      * tiles[i][j] = tile at row i, column j
      */
     public Board(int[][] tiles) {
         if (tiles == null || tiles[0] == null || tiles.length != tiles[0].length) {
             throw new IllegalArgumentException();
         }
-        this.N = tiles.length;
-        this.tiles = new int[N][N];
-        for (int i = 0; i < N; i++) {
-            for (int j = 0; j < N; j++) {
+        this.size = tiles.length;
+        this.tiles = new int[size][size];
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
                 this.tiles[i][j] = tiles[i][j];
             }
         }
@@ -30,17 +30,17 @@ public class Board implements WorldState {
      * Returns value of tile at row i, column j (or 0 if blank)
      */
     public int tileAt(int i, int j) {
-        if (i < 0 || i >= N || j < 0 || j >= N) {
+        if (i < 0 || i >= size || j < 0 || j >= size) {
             throw new IndexOutOfBoundsException("invalid position");
         }
         return tiles[i][j];
     }
 
     /**
-     * Returns the board size N
+     * Returns the board size size
      */
     public int size() {
-        return N;
+        return size;
     }
 
     /**
@@ -94,20 +94,20 @@ public class Board implements WorldState {
 
     private int computeHamming() {
         int count = 0;
-        for (int i = 0; i < N; i++) {
-            for (int j = 0; j < N; j++) {
-                if (i == N - 1 && j == N - 1) {
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                if (i == size - 1 && j == size - 1) {
                     continue;
                 }
-                count += tileAt(i, j) == i * N + j + 1 ? 0 : 1;
+                count += tileAt(i, j) == i * size + j + 1 ? 0 : 1;
             }
         }
         return count;
     }
 
     private int findTileGoal(int number, int i, int j) {
-        int goalI = (number - 1) / N;
-        int goalJ = (number - 1) % N;
+        int goalI = (number - 1) / size;
+        int goalJ = (number - 1) % size;
         return Math.abs(goalI - i) + Math.abs(goalJ - j);
     }
 
@@ -123,8 +123,8 @@ public class Board implements WorldState {
 
     private int computeManhattan() {
         int count = 0;
-        for (int i = 0; i < N; i++) {
-            for (int j = 0; j < N; j++) {
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
                 if (tileAt(i, j) == 0) {
                     continue;
                 }
@@ -153,11 +153,11 @@ public class Board implements WorldState {
             return false;
         }
         Board other = (Board) y;
-        if (this.N != other.N) {
+        if (this.size != other.size) {
             return false;
         }
-        for (int i = 0; i < N; i++) {
-            for (int j = 0; j < N; j++) {
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
                 if (this.tiles[i][j] != other.tiles[i][j]) {
                     return false;
                 }

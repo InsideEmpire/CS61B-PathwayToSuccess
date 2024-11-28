@@ -3,6 +3,8 @@ package hw4.puzzle;
 import edu.princeton.cs.algs4.MinPQ;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 public class Solver {
@@ -69,7 +71,7 @@ public class Solver {
             solutionRoute.add(searchNode.node);
             searchNode = searchNode.previousNode;
         }
-        solutionRoute = solutionRoute.reversed();
+        Collections.reverse(solutionRoute);
     }
 
     /**
