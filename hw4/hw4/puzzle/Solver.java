@@ -30,7 +30,8 @@ public class Solver {
 
         @Override
         public int compareTo(SearchNode other) {
-            return Integer.compare(this.movesFromInitial + this.node.estimatedDistanceToGoal(), other.movesFromInitial + other.node.estimatedDistanceToGoal());
+            return Integer.compare(this.movesFromInitial + this.node.estimatedDistanceToGoal(),
+                    other.movesFromInitial + other.node.estimatedDistanceToGoal());
         }
     }
 
@@ -46,16 +47,16 @@ public class Solver {
         SearchNode initialNode = new SearchNode(initial);
         queue.insert(initialNode);
         while (!queue.isEmpty()) {
-            SearchNode BMS = queue.delMin();
-            if (BMS.node.isGoal()) {
-                getMovesAndSolution(BMS);
+            SearchNode best = queue.delMin();
+            if (best.node.isGoal()) {
+                getMovesAndSolution(best);
                 return;
             } else {
-                for (WorldState neighbor : BMS.node.neighbors()) {
-                    if (BMS.previousNode != null && neighbor.equals(BMS.previousNode.node)) {
+                for (WorldState neighbor : best.node.neighbors()) {
+                    if (best.previousNode != null && neighbor.equals(best.previousNode.node)) {
                         continue;
                     }
-                    queue.insert(new SearchNode(neighbor, BMS));
+                    queue.insert(new SearchNode(neighbor, best));
                 }
             }
         }
