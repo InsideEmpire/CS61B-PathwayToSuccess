@@ -3,14 +3,13 @@ package hw4.puzzle;
 import edu.princeton.cs.algs4.MinPQ;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
 public class Solver {
 
-    int minimumMoves;
-    List<WorldState> solutionRoute;
+    private int minimumMoves;
+    private List<WorldState> solutionRoute;
     private MinPQ<SearchNode> queue;
 
     private static class SearchNode implements Comparable<SearchNode> {
