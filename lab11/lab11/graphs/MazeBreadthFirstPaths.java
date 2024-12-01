@@ -1,12 +1,10 @@
 package lab11.graphs;
 
-import java.util.AbstractQueue;
 import java.util.ArrayDeque;
-import java.util.Iterator;
-import java.util.Queue;
 
 /**
  *  @author Josh Hug
+ * @author Garrison
  */
 public class MazeBreadthFirstPaths extends MazeExplorer {
     /* Inherits public fields:
@@ -20,7 +18,6 @@ public class MazeBreadthFirstPaths extends MazeExplorer {
 
     public MazeBreadthFirstPaths(Maze m, int sourceX, int sourceY, int targetX, int targetY) {
         super(m);
-        // TODO: Add more variables here!
         this.s = maze.xyTo1D(sourceX, sourceY);
         this.t = maze.xyTo1D(targetX, targetY);
         this.distTo[s] = 0;
@@ -29,7 +26,6 @@ public class MazeBreadthFirstPaths extends MazeExplorer {
 
     /** Conducts a breadth first search of the maze starting at the source. */
     private void bfs() {
-        // TODO: Your code here. Don't forget to update distTo, edgeTo, and marked, as well as call announce()
         ArrayDeque<Integer> bfsQueue = new ArrayDeque<>();
         bfsQueue.addLast(s);
 

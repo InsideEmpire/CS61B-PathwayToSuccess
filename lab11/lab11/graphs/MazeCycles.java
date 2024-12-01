@@ -2,10 +2,9 @@ package lab11.graphs;
 
 import edu.princeton.cs.algs4.Stack;
 
-import java.util.ArrayList;
-
 /**
  *  @author Josh Hug
+ * @author Garrison
  */
 public class MazeCycles extends MazeExplorer {
     /* Inherits public fields:
@@ -25,15 +24,15 @@ public class MazeCycles extends MazeExplorer {
 
     @Override
     public void solve() {
-        dfsHelper();
+        dfsHelper(0);
     }
 
-    private void dfsHelper() {
+    private void dfsHelper(int start) {
 
         Stack<Integer> dfsStack = new Stack<>();
         Stack<Integer> loopStack = new Stack<>();
 
-        dfsStack.push(0);
+        dfsStack.push(start);
         int curr;
 
         while (!dfsStack.isEmpty()) {
