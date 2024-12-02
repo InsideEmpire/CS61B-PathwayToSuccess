@@ -14,7 +14,15 @@ public class SimpleOomage implements Oomage {
 
     @Override
     public boolean equals(Object o) {
-        // TODO: Write this method.
+        if (o.getClass() != SimpleOomage.class) {
+            return false;
+        }
+        SimpleOomage that = (SimpleOomage) o;
+        if (this.red == that.red
+                && this.blue == that.blue
+                && this.green == that.green) {
+            return true;
+        }
         return false;
     }
 
