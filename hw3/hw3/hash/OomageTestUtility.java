@@ -1,8 +1,5 @@
 package hw3.hash;
 
-import edu.princeton.cs.algs4.In;
-
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,8 +19,9 @@ public class OomageTestUtility {
             int bucketNum = (oomage.hashCode() & 0x7FFFFFFF) % M;
             if (bucketNumAndValue.containsKey(bucketNum)) {
                 bucketNumAndValue.put(bucketNum, bucketNumAndValue.get(bucketNum) + 1);
-            } else
+            } else {
                 bucketNumAndValue.put(bucketNum, 0);
+            }
         }
         for (Map.Entry<Integer, Integer> entry : bucketNumAndValue.entrySet()) {
             if (entry.getValue() < N / 50 || entry.getValue() > N / 2.5) {
