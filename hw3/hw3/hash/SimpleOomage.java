@@ -1,5 +1,7 @@
 package hw3.hash;
 import java.awt.Color;
+import java.util.Objects;
+
 import edu.princeton.cs.algs4.StdRandom;
 import edu.princeton.cs.algs4.StdDraw;
 
@@ -31,7 +33,10 @@ public class SimpleOomage implements Oomage {
         if (!USE_PERFECT_HASH) {
             return red + green + blue;
         } else {
-            return (red << 16) | (green << 8) | blue;
+            // Both evaluation methods for hashCode are effective,
+            // but the one below is more refined and preferable.
+            // return (red << 16) | (green << 8) | blue;
+            return Objects.hash(red / 5, green / 5, blue / 5);
         }
     }
 
