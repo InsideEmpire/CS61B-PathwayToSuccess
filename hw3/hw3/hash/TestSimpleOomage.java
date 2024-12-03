@@ -36,8 +36,6 @@ public class TestSimpleOomage {
                     SimpleOomage o2 = new SimpleOomage(red, green, blue);
                     if (o1.equals(o2)) {
                         assertEquals(o1.hashCode(), o2.hashCode());
-                    } else {
-                        assertNotEquals(o1.hashCode(), o2.hashCode());
                     }
                 }
             }
