@@ -3,6 +3,7 @@ import java.util.List;
 import java.util.ArrayList;
 import edu.princeton.cs.algs4.StdDraw;
 import java.awt.Color;
+
 import edu.princeton.cs.algs4.StdRandom;
 
 public class ComplexOomage implements Oomage {
@@ -13,8 +14,11 @@ public class ComplexOomage implements Oomage {
     public int hashCode() {
         int total = 0;
         for (int x : params) {
+            /*
             total = total * 256;
             total = total + x;
+            */
+            total = (total * 31 + x) ^ (total >>> 16);
         }
         return total;
     }
@@ -30,7 +34,7 @@ public class ComplexOomage implements Oomage {
 
     public ComplexOomage(List<Integer> params) {
         if (params == null) {
-            throw new IllegalArgumentException("params must not be null!");            
+            throw new IllegalArgumentException("params must not be null!");
         }
 
         for (Integer x : params) {
