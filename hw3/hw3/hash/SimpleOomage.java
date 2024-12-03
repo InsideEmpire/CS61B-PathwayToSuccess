@@ -1,7 +1,6 @@
 package hw3.hash;
 
 import java.awt.Color;
-import java.util.Objects;
 
 import edu.princeton.cs.algs4.StdRandom;
 import edu.princeton.cs.algs4.StdDraw;
