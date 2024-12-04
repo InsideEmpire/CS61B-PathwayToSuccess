@@ -83,10 +83,14 @@ public class MergeSort {
         students.enqueue("Josh");
         students.enqueue("Garrison");
         students.enqueue("Ethan");
-        System.out.println("Original: " + students);
-        Queue<String> sortedStudents = MergeSort.mergeSort(students);
-        System.out.println("Sorted: " + sortedStudents);
 
+        Queue<String> sortedStudents = MergeSort.mergeSort(students);
+
+        System.out.println("Original: " + students);
+        System.out.println("Original size: " + students.size());
+
+        System.out.println("Sorted: " + sortedStudents);
+        System.out.println("Sorted size: " + sortedStudents.size());
     }
 
 }
