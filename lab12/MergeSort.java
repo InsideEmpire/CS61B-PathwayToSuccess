@@ -34,8 +34,13 @@ public class MergeSort {
     /** Returns a queue of queues that each contain one item from items. */
     private static <Item extends Comparable> Queue<Queue<Item>>
             makeSingleItemQueues(Queue<Item> items) {
-        // Your code here!
-        return null;
+        Queue<Queue<Item>> queueOfQueues = new Queue<>();
+        for (Item oneItem : items) {
+            Queue<Item> singleQueue = new Queue<>();
+            singleQueue.enqueue(oneItem);
+            queueOfQueues.enqueue(singleQueue);
+        }
+        return queueOfQueues;
     }
 
     /**
@@ -53,14 +58,35 @@ public class MergeSort {
      */
     private static <Item extends Comparable> Queue<Item> mergeSortedQueues(
             Queue<Item> q1, Queue<Item> q2) {
-        // Your code here!
-        return null;
+        Queue<Item> mergedQueue = new Queue<>();
+        while (!q1.isEmpty() || !q2.isEmpty()) {
+            mergedQueue.enqueue(getMin(q1, q2));
+        }
+        return mergedQueue;
     }
 
     /** Returns a Queue that contains the given items sorted from least to greatest. */
     public static <Item extends Comparable> Queue<Item> mergeSort(
             Queue<Item> items) {
-        // Your code here!
-        return items;
+        Queue<Item> sortedItems = new Queue<>();
+        Queue<Queue<Item>> singleItemQueue = makeSingleItemQueues(items);
+        while (!singleItemQueue.isEmpty()) {
+            sortedItems = mergeSortedQueues(sortedItems, singleItemQueue.dequeue());
+        }
+        return sortedItems;
     }
+
+    public static void main(String[] args) {
+        Queue<String> students = new Queue<String>();
+        students.enqueue("Vanessa");
+        students.enqueue("Alice");
+        students.enqueue("Josh");
+        students.enqueue("Garrison");
+        students.enqueue("Ethan");
+        System.out.println("Original: " + students);
+        Queue<String> sortedStudents = MergeSort.mergeSort(students);
+        System.out.println("Sorted: " + sortedStudents);
+
+    }
+
 }
