@@ -77,7 +77,7 @@ public class MergeSort {
     }
 
     public static void main(String[] args) {
-        Queue<String> students = new Queue<String>();
+        Queue<String> students = new Queue<>();
         students.enqueue("Vanessa");
         students.enqueue("Alice");
         students.enqueue("Josh");
