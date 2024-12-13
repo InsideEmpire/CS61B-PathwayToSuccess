@@ -48,3 +48,6 @@ $RECYCLE.BIN/
 *.msm
 *.msp
 *.lnk
+**.idea/
+**out/
+**.idea/.gitignore
