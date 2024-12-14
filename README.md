@@ -9,7 +9,7 @@
 
   - Lab 2✅ - IDEs - [Solution](lab2/) - [Website](https://sp18.datastructur.es/materials/lab/lab2/lab2)
 
-  - Lab 2setup✅ - Setting Up IntelliJ - [Solution](lab2setup/) - [Website](https://sp18.datastructur.es/materials/lab/lab2setup/lab2setup) - [library-sp18](library-sp18/)
+  - Lab 2setup✅ - Setting Up IntelliJ - [Solution](lab2setup/) - [Website](https://sp18.datastructur.es/materials/lab/lab2setup/lab2setup) - [library-sp18](https://github.com/Berkeley-CS61B/library-sp18/tree/f63dd94bbf9496dd6642a63cb5e8dd26b32e1728)
 
   - Lab 3✅ - Testing, Debugging - [Solution](lab3/) - [Website](https://sp18.datastructur.es/materials/lab/lab3/lab3)
 
