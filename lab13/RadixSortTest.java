@@ -74,4 +74,36 @@ public class RadixSortTest {
         String[] sorted = RadixSort.sort(input);
         assertArrayEquals(expected, sorted);
     }
+
+    // 测试长字符串中的字母和数字的排序
+    @Test
+    public void testSortLongStringsWithNumbers() {
+        String[] input = {
+                "apple1234567890",
+                "banana1234567890",
+                "orange9876543210",
+                "grape0123456789",
+                "pear0012345678"
+        };
+        String[] expected = {
+                "apple1234567890",
+                "banana1234567890",
+                "grape0123456789",
+                "orange9876543210",
+                "pear0012345678"
+        };
+
+        String[] sorted = RadixSort.sort(input);
+        assertArrayEquals(expected, sorted);
+    }
+
+    // 测试完全相同的字符串
+    @Test
+    public void testSortIdenticalStrings() {
+        String[] input = {"apple", "apple", "apple", "apple", "apple"};
+        String[] expected = {"apple", "apple", "apple", "apple", "apple"};
+
+        String[] sorted = RadixSort.sort(input);
+        assertArrayEquals(expected, sorted);
+    }
 }
