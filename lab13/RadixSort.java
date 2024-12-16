@@ -56,10 +56,10 @@ public class RadixSort {
 
         for (String str : asciis) {
             int charIndex;
-            try {
-                charIndex = (int) str.charAt(numDigitsInAnInteger - index - 1);
-            } catch (IndexOutOfBoundsException e) {
+            if (numDigitsInAnInteger - index > str.length()) {
                 charIndex = 0;
+            } else {
+                charIndex = (int) str.charAt(numDigitsInAnInteger - index - 1);
             }
             buckets[charIndex].add(str);
         }
