@@ -21,9 +21,9 @@
 
   - Lab 11✅ - Graphs - [Solution](lab11/) - [Website](https://sp18.datastructur.es/materials/lab/lab11/lab11)
 
-  - Lab  12✅ - Merge Sort and Quick Sort - [Solution](lab12/) - [Website](https://sp18.datastructur.es/materials/lab/lab12/lab12)
+  - Lab 12✅ - Merge Sort and Quick Sort - [Solution](lab12/) - [Website](https://sp18.datastructur.es/materials/lab/lab12/lab12)
 
-  - Lab13 - Radix Sorts - [Solution](lab13/) - [Website](https://sp18.datastructur.es/materials/lab/lab13/lab13)
+  - Lab 13✅ - Radix Sorts - [Solution](lab13/) - [Website](https://sp18.datastructur.es/materials/lab/lab13/lab13)
 
   - Lab 14 - Fractal Sound - [Solution](lab14/) - [Website](https://sp18.datastructur.es/materials/lab/lab14/lab14)
 
