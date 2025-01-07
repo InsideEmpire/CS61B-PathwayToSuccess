@@ -18,41 +18,52 @@ public class Rasterer {
     private final List<List<Double>> lrlon_List = new LinkedList<>();
     private final List<List<Double>> lrlat_List = new LinkedList<>();
 
-    private final double TOTAL_LONGITUDE = 122.29980468 - 122.21191406;
-    private final double TOTAL_LATITUDE = 37.89219554 - 37.82280243;
+    private final double ROOT_LON = 122.29980468 - 122.21191406;
+    private final double ROOT_LAT = 37.89219554 - 37.82280243;
 
-    private final double START_LONGITUDE = -122.29980468;
-    private final double END_LONGITUDE = -122.21191406;
-    private final double START_LATITUDE = 37.82280243;
-    private final double END_LATITUDE = 37.89219554;
+    private final double ROOT_ULLON = -122.29980468;
+    private final double ROOT_LRLON = -122.21191406;
+    private final double ROOT_ULLAT = 37.89219554;
+    private final double ROOT_LRLAT = 37.82280243;
 
     private final double PIXEL = 256;
 
     public Rasterer() {
         for (int Dth = 0; Dth <= 7; Dth++) {
             /*
-                @num: How many tiles are in a row at the Dth zoom level
+                @numbersARaw: How many tiles are in a row at the Dth zoom level
                 @DthLon: The longitude length of each tiles at Dth zoom level
                 @DthLat: The latitude length of each tiles at Dth zoom level
                 @DthLonDPP: The LonDPP of Dth zoom level tile
              */
-            double num = Math.pow(2, Dth);
-            double DthLon = TOTAL_LONGITUDE / num;
-            double DthLat = TOTAL_LATITUDE / num;
+            int numbersAll = (int) Math.pow(2, Dth);
+//            int numbersOneRaw = Dth + 1;
+            double DthLon = ROOT_LON / numbersAll;
+            double DthLat = ROOT_LAT / numbersAll;
             double DthLonDPP = DthLon / PIXEL;
             LonDPP_List.add(DthLonDPP);
             ullon_List.add(new ArrayList<>());
             lrlon_List.add(new ArrayList<>());
             ullat_List.add(new ArrayList<>());
             lrlat_List.add(new ArrayList<>());
-            for (int i = 0; i < num; i++) {
-                ullon_List.get(Dth).add(START_LONGITUDE + i * DthLon);
-                lrlon_List.get(Dth).add(START_LONGITUDE + (i + 1) * DthLon);
-                ullat_List.get(Dth).add(START_LATITUDE + i * DthLat);
-                lrlat_List.get(Dth).add(START_LATITUDE + (i + 1) * DthLat);
+            for (int i = 0; i < numbersAll; i++) {
+                ullon_List.get(Dth).add(ROOT_ULLON + i * DthLon);
+                lrlon_List.get(Dth).add(ROOT_ULLON + (i + 1) * DthLon);
+                ullat_List.get(Dth).add(ROOT_ULLAT - i * DthLat);
+                lrlat_List.get(Dth).add(ROOT_ULLAT - (i + 1) * DthLat);
+//                System.out.println("ullat at " + i + ullat_List.get(Dth).get(i));
+//                System.out.println("lrlat at " + i + lrlat_List.get(Dth).get(i));
             }
-            System.out.println("LonDPP of " + Dth + "th level is: " + DthLonDPP);
+//            System.out.println("LonDPP of " + Dth + "th level is: " + DthLonDPP);
+//            System.out.println(lrlat_List.get(Dth).get(numbersAll - 1));
+//            System.out.println(ROOT_LRLAT);
         }
+        for (int i = 0; i < 8; i++) {
+//            System.out.println("ullat of " + i + " at 3 level is " + ullat_List.get(3).get(i));
+//            System.out.println("lrlat of " + i + " at 3 level is " + lrlat_List.get(3).get(i));
+        }
+//        System.out.println("d1_x1_y1, lrlon: " + lrlon_List.get(1).get(1) + " ullon: " + ullon_List.get(1).get(1));
+//        System.out.println("LonDPP: " + (lrlon_List.get(1).get(1) - ullon_List.get(1).get(1)) / PIXEL);
     }
 
     /**
@@ -84,30 +95,69 @@ public class Rasterer {
      *                    forget to set this to true on success! <br>
      */
     public Map<String, Object> getMapRaster(Map<String, Double> params) {
-         System.out.println(params);
+//        System.out.println(params);
         Map<String, Object> results = new HashMap<>();
         double lrlon = params.get("lrlon");
         double ullon = params.get("ullon");
         double ullat = params.get("ullat");
         double lrlat = params.get("lrlat");
-        double w = params.get("ullon");
-        double h = params.get("ullon");
+        double w = params.get("w");
+        double h = params.get("h");
         double LonDPP = (lrlon - ullon) / w;
-        System.out.println(LonDPP);
+//        System.out.println(lrlon - ullon);
+//        System.out.println(LonDPP);
 
         int depth = 0;
         for (int Dth = 0; Dth <= 7; Dth++) {
             if (LonDPP_List.get(Dth) < LonDPP) {
-                depth = Dth - 1;
+                // TODO: Dth -1 or Dth
+                depth = Dth;
                 break;
             }
         }
-        System.out.println(depth + " is the BEST zoom level");
+//        System.out.println(depth + " is the BEST zoom level");
 
-        // TODO: finish render_grid...
-        // TODO: (int) Math.pow(2, depth) is not good answer. Try to calculate Query Box's position
-        String[][] render_grid = new String[(int) Math.pow(2, depth)][(int) Math.pow(2, depth)];
+        int ulx = 0, uly = 0, lrx = 0, lry = 0;
+        double raster_ul_lon = 0, raster_ul_lat = 0, raster_lr_lon = 0, raster_lr_lat = 0;
+        for (int i = 0; i < (int) Math.pow(2, depth); i++) {
+            if (ullon_List.get(depth).get(i) <= ullon && ullon <= lrlon_List.get(depth).get(i)) {
+                ulx = i;
+                raster_ul_lon = ullon_List.get(depth).get(i);
+            }
+            if (ullat_List.get(depth).get(i) >= ullat && ullat >= lrlat_List.get(depth).get(i)) {
+                uly = i;
+                raster_ul_lat = ullat_List.get(depth).get(i);
+            }
+            if (ullon_List.get(depth).get(i) <= lrlon && lrlon <= lrlon_List.get(depth).get(i)) {
+                lrx = i;
+                raster_lr_lon = lrlon_List.get(depth).get(i);
+            }
+            if (ullat_List.get(depth).get(i) >= lrlat && lrlat >= lrlat_List.get(depth).get(i)) {
+                lry = i;
+                raster_lr_lat = lrlat_List.get(depth).get(i);
+            }
+        }
+//        System.out.println("ulx: " + ulx + " uly: " + uly + " lrx: " + lrx + " lry: " + lry);
 
+        String[][] render_grid = new String[lry - uly + 1][lrx - ulx + 1];
+        for (int i = 0; i <= lry - uly; i++) {
+            for (int j = 0; j <= lrx - ulx; j++) {
+                StringBuffer str = new StringBuffer();
+                str.append("d").append(depth).append("_x").append(ulx + j).append("_y").append(uly + i).append(".png");
+                render_grid[i][j] = str.toString();
+//                System.out.println(str);
+            }
+        }
+
+        boolean query_success = true;
+
+        results.put("render_grid", render_grid);
+        results.put("raster_ul_lon", raster_ul_lon);
+        results.put("raster_ul_lat", raster_ul_lat);
+        results.put("raster_lr_lon", raster_lr_lon);
+        results.put("raster_lr_lat", raster_lr_lat);
+        results.put("depth", depth);
+        results.put("query_success", query_success);
         return results;
     }
 
