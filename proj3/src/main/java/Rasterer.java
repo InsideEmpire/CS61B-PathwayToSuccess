@@ -18,13 +18,13 @@ public class Rasterer {
     private final List<List<Double>> lrlon_List = new LinkedList<>();
     private final List<List<Double>> lrlat_List = new LinkedList<>();
 
-    private final double ROOT_LON = 122.29980468 - 122.21191406;
-    private final double ROOT_LAT = 37.89219554 - 37.82280243;
+    private final double ROOT_LON = 122.2998046875 - 122.2119140625;
+    private final double ROOT_LAT = 37.892195547244356 - 37.82280243352756;
 
-    private final double ROOT_ULLON = -122.29980468;
-    private final double ROOT_LRLON = -122.21191406;
-    private final double ROOT_ULLAT = 37.89219554;
-    private final double ROOT_LRLAT = 37.82280243;
+    private final double ROOT_ULLON = -122.2998046875;
+    private final double ROOT_LRLON = -122.2119140625;
+    private final double ROOT_ULLAT = 37.892195547244356;
+    private final double ROOT_LRLAT = 37.82280243352756;
 
     private final double PIXEL = 256;
 
@@ -37,7 +37,6 @@ public class Rasterer {
                 @DthLonDPP: The LonDPP of Dth zoom level tile
              */
             int numbersAll = (int) Math.pow(2, Dth);
-//            int numbersOneRaw = Dth + 1;
             double DthLon = ROOT_LON / numbersAll;
             double DthLat = ROOT_LAT / numbersAll;
             double DthLonDPP = DthLon / PIXEL;
@@ -46,24 +45,19 @@ public class Rasterer {
             lrlon_List.add(new ArrayList<>());
             ullat_List.add(new ArrayList<>());
             lrlat_List.add(new ArrayList<>());
+            System.out.println("DEBUG: zoom level is " + Dth);
             for (int i = 0; i < numbersAll; i++) {
+                // TODO: something wrong with the calculation, (precision problem)
                 ullon_List.get(Dth).add(ROOT_ULLON + i * DthLon);
                 lrlon_List.get(Dth).add(ROOT_ULLON + (i + 1) * DthLon);
                 ullat_List.get(Dth).add(ROOT_ULLAT - i * DthLat);
                 lrlat_List.get(Dth).add(ROOT_ULLAT - (i + 1) * DthLat);
-//                System.out.println("ullat at " + i + ullat_List.get(Dth).get(i));
-//                System.out.println("lrlat at " + i + lrlat_List.get(Dth).get(i));
+                System.out.println("  ullon at x" + i + " is " + ullon_List.get(Dth).get(i));
+                System.out.println("  lrlon at x" + i + " is " + lrlon_List.get(Dth).get(i));
+                System.out.println("  ullat at y" + i + " is " + ullat_List.get(Dth).get(i));
+                System.out.println("  lrlat at y" + i + " is " + lrlat_List.get(Dth).get(i));
             }
-//            System.out.println("LonDPP of " + Dth + "th level is: " + DthLonDPP);
-//            System.out.println(lrlat_List.get(Dth).get(numbersAll - 1));
-//            System.out.println(ROOT_LRLAT);
         }
-        for (int i = 0; i < 8; i++) {
-//            System.out.println("ullat of " + i + " at 3 level is " + ullat_List.get(3).get(i));
-//            System.out.println("lrlat of " + i + " at 3 level is " + lrlat_List.get(3).get(i));
-        }
-//        System.out.println("d1_x1_y1, lrlon: " + lrlon_List.get(1).get(1) + " ullon: " + ullon_List.get(1).get(1));
-//        System.out.println("LonDPP: " + (lrlon_List.get(1).get(1) - ullon_List.get(1).get(1)) / PIXEL);
     }
 
     /**
@@ -95,7 +89,6 @@ public class Rasterer {
      *                    forget to set this to true on success! <br>
      */
     public Map<String, Object> getMapRaster(Map<String, Double> params) {
-//        System.out.println(params);
         Map<String, Object> results = new HashMap<>();
         double lrlon = params.get("lrlon");
         double ullon = params.get("ullon");
@@ -103,19 +96,18 @@ public class Rasterer {
         double lrlat = params.get("lrlat");
         double w = params.get("w");
         double h = params.get("h");
-        double LonDPP = (lrlon - ullon) / w;
-//        System.out.println(lrlon - ullon);
-//        System.out.println(LonDPP);
 
-        int depth = 0;
+        double LonDPP = (lrlon - ullon) / w;
+
+        boolean query_success = true;
+
+        int depth = 7;
         for (int Dth = 0; Dth <= 7; Dth++) {
             if (LonDPP_List.get(Dth) < LonDPP) {
-                // TODO: Dth -1 or Dth
                 depth = Dth;
                 break;
             }
         }
-//        System.out.println(depth + " is the BEST zoom level");
 
         int ulx = 0, uly = 0, lrx = 0, lry = 0;
         double raster_ul_lon = 0, raster_ul_lat = 0, raster_lr_lon = 0, raster_lr_lat = 0;
@@ -137,7 +129,6 @@ public class Rasterer {
                 raster_lr_lat = lrlat_List.get(depth).get(i);
             }
         }
-//        System.out.println("ulx: " + ulx + " uly: " + uly + " lrx: " + lrx + " lry: " + lry);
 
         String[][] render_grid = new String[lry - uly + 1][lrx - ulx + 1];
         for (int i = 0; i <= lry - uly; i++) {
@@ -145,11 +136,15 @@ public class Rasterer {
                 StringBuffer str = new StringBuffer();
                 str.append("d").append(depth).append("_x").append(ulx + j).append("_y").append(uly + i).append(".png");
                 render_grid[i][j] = str.toString();
-//                System.out.println(str);
             }
         }
 
-        boolean query_success = true;
+
+        System.out.println("DEBUG:");
+        System.out.println(params);
+        System.out.println("    " + LonDPP);
+        System.out.println("    " + depth + " is the BEST zoom level");
+        System.out.println("    ulx: " + ulx + " uly: " + uly + " lrx: " + lrx + " lry: " + lry);
 
         results.put("render_grid", render_grid);
         results.put("raster_ul_lon", raster_ul_lon);
