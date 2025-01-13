@@ -6,7 +6,7 @@ import java.io.IOException;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
-import java.util.ArrayList;
+import java.util.*;
 
 /**
  * Graph for storing all of the intersection (vertex) and road (edge) information.
@@ -18,8 +18,66 @@ import java.util.ArrayList;
  * @author Alan Yao, Josh Hug
  */
 public class GraphDB {
-    /** Your instance variables for storing the graph. You should consider
-     * creating helper classes, e.g. Node, Edge, etc. */
+    Map<Long, Node> nodes;
+    Map<Long, Edge> edges;
+
+    /**
+     * Add a new vertex to the graph.
+     * @param ID the ID of the new vertex.
+     * @param latitude the latitude of the new vertex.
+     * @param longitude the longitude of the new vertex.
+     */
+    void addVertices(String ID, String latitude, String longitude) {
+        Node node = new Node(ID, latitude, longitude);
+        nodes.put(node.id, node);
+    }
+
+    /**
+     * Add a new connection relationship to the graph.
+     * @param ID ID of new edge.
+     */
+    void addAdjacent(String ID) {
+        edges.put(Long.valueOf(ID), new Edge(ID));
+    }
+
+    void addAdjacent(Edge edge) {
+        edges.put(edge.id, edge);
+        long last1 = -1L, last2 = -2L;
+        if (edge.linkedNode.size() == 2) {
+            nodes.get(edge.linkedNode.get(0)).adjacentNode.add(edge.linkedNode.get(1));
+            nodes.get(edge.linkedNode.get(1)).adjacentNode.add(edge.linkedNode.get(0));
+            nodes.get(edge.linkedNode.get(0)).adjacentEdge.add(edge.id);
+            nodes.get(edge.linkedNode.get(1)).adjacentEdge.add(edge.id);
+            return;
+        }
+        for (long reference : edge.linkedNode) {
+            nodes.get(reference).adjacentEdge.add(edge.id);
+            if (last2 < 0) {
+                last2 = last1;
+                last1 = reference;
+                continue;
+            }
+            nodes.get(last2).adjacentNode.add(last1);
+            nodes.get(last1).adjacentNode.add(last2);
+            nodes.get(last1).adjacentNode.add(reference);
+            nodes.get(reference).adjacentNode.add(last1);
+
+            nodes.get(last1).adjacentEdge.add(edge.id);
+            nodes.get(last2).adjacentEdge.add(edge.id);
+            nodes.get(reference).adjacentEdge.add(edge.id);
+            last2 = last1;
+            last1 = reference;
+        }
+    }
+
+    void lastIDAddTag(String lastID, String k, String v) {
+        long id = Long.parseLong(lastID);
+        if (nodes.containsKey(id)) {
+            nodes.get(id).addTag(k, v);
+        } else if (edges.containsKey(id)) {
+            edges.get(id).addTag(k, v);
+        }
+    }
 
     /**
      * Example constructor shows how to create and start an XML parser.
@@ -28,6 +86,9 @@ public class GraphDB {
      */
     public GraphDB(String dbPath) {
         try {
+            edges = new HashMap<>();
+            nodes = new HashMap<>();
+
             File inputFile = new File(dbPath);
             FileInputStream inputStream = new FileInputStream(inputFile);
             // GZIPInputStream stream = new GZIPInputStream(inputStream);
@@ -57,7 +118,15 @@ public class GraphDB {
      *  we can reasonably assume this since typically roads are connected.
      */
     private void clean() {
-        // TODO: Your code here.
+        Set<Long> ID = new HashSet<>();
+        for (Long id : nodes.keySet()) {
+            if (nodes.get(id).adjacentNode.isEmpty()) {
+                ID.add(id);
+            }
+        }
+        for (Long id : ID) {
+            nodes.remove(id);
+        }
     }
 
     /**
@@ -65,8 +134,11 @@ public class GraphDB {
      * @return An iterable of id's of all vertices in the graph.
      */
     Iterable<Long> vertices() {
-        //YOUR CODE HERE, this currently returns only an empty list.
-        return new ArrayList<Long>();
+        List<Long> vertices = new ArrayList<>();
+        for (Long id : nodes.keySet()) {
+            vertices.add(id);
+        }
+        return vertices;
     }
 
     /**
@@ -75,7 +147,7 @@ public class GraphDB {
      * @return An iterable of the ids of the neighbors of v.
      */
     Iterable<Long> adjacent(long v) {
-        return null;
+        return new ArrayList<>(nodes.get(v).adjacentNode);
     }
 
     /**
@@ -136,7 +208,15 @@ public class GraphDB {
      * @return The id of the node in the graph closest to the target.
      */
     long closest(double lon, double lat) {
-        return 0;
+        long id = 0L;
+        double distance = Double.MAX_VALUE;
+        for (Node node : nodes.values()) {
+            if (distance(lon, lat, node.lon, node.lat) < distance) {
+                distance = distance(lon, lat, node.lon, node.lat);
+                id = node.id;
+            }
+        }
+        return id;
     }
 
     /**
@@ -145,7 +225,7 @@ public class GraphDB {
      * @return The longitude of the vertex.
      */
     double lon(long v) {
-        return 0;
+        return nodes.get(v).lon;
     }
 
     /**
@@ -154,6 +234,62 @@ public class GraphDB {
      * @return The latitude of the vertex.
      */
     double lat(long v) {
-        return 0;
+        return nodes.get(v).lat;
+    }
+
+    static class Node {
+        long id;
+        double lat;
+        double lon;
+        Map<String, String> tags;
+        Set<Long> adjacentEdge;
+        Set<Long> adjacentNode;
+
+        Node(long ID, double latitude, double longitude) {
+            this.id = ID;
+            this.lat = latitude;
+            this.lon = longitude;
+            this.adjacentEdge = new HashSet<>();
+            this.adjacentNode = new HashSet<>();
+            this.tags = new HashMap<>();
+        }
+
+        public Node(String ID, String latitude, String longitude) {
+            this.id = Long.parseLong(ID);
+            this.lat = Double.parseDouble(latitude);
+            this.lon = Double.parseDouble(longitude);
+            this.adjacentEdge = new HashSet<>();
+            this.adjacentNode = new HashSet<>();
+            this.tags = new HashMap<>();
+        }
+
+        void addTag(String k, String v) {
+            this.tags.put(k, v);
+        }
+    }
+
+    static class Edge {
+        long id;
+        List<Long> linkedNode;
+        Map<String, String> tags;
+
+        Edge(long ID) {
+            this.id = ID;
+            this.linkedNode = new ArrayList<>();
+            this.tags = new HashMap<>();
+        }
+        Edge(String ID) {
+            this.id = Long.parseLong(ID);
+            this.linkedNode = new ArrayList<>();
+            this.tags = new HashMap<>();
+        }
+
+        void addTag(String k, String v) {
+            this.tags.put(k, v);
+        }
+
+        void addLinkedNode(String ID) {
+            this.linkedNode.add(Long.valueOf(ID));
+        }
     }
 }
