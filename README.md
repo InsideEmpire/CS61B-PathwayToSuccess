@@ -1,5 +1,3 @@
-# ‼️目前处于期末周，等结束考试后再继续更新‼️
-
 # **CS61B - Spring 2018 代码全解 Full Code Guide**
 
 ## **目录Contents**
@@ -54,7 +52,7 @@
 
   - Proj 2✅ - CS61BYoG - [Solution](proj2/) - [Website](https://sp18.datastructur.es/materials/proj/proj2/proj2.html)
 
-  - Proj 3 - Bear Maps - [Solution](proj3/) - [Website](https://sp18.datastructur.es/materials/proj/proj3/proj3)
+  - Proj 3✅ - Bear Maps - [Solution](proj3/) - [Website](https://sp18.datastructur.es/materials/proj/proj3/proj3)
 
 ## **友链 Friend Links:**
 
