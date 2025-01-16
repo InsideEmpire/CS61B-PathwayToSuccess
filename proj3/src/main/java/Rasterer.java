@@ -45,17 +45,17 @@ public class Rasterer {
             lrlon_List.add(new ArrayList<>());
             ullat_List.add(new ArrayList<>());
             lrlat_List.add(new ArrayList<>());
-            System.out.println("DEBUG: zoom level is " + Dth);
+            // System.out.println("DEBUG: zoom level is " + Dth);
             for (int i = 0; i < numbersAll; i++) {
                 // TODO: something wrong with the calculation, (precision problem)
                 ullon_List.get(Dth).add(ROOT_ULLON + i * DthLon);
                 lrlon_List.get(Dth).add(ROOT_ULLON + (i + 1) * DthLon);
                 ullat_List.get(Dth).add(ROOT_ULLAT - i * DthLat);
                 lrlat_List.get(Dth).add(ROOT_ULLAT - (i + 1) * DthLat);
-                System.out.println("  ullon at x" + i + " is " + ullon_List.get(Dth).get(i));
-                System.out.println("  lrlon at x" + i + " is " + lrlon_List.get(Dth).get(i));
-                System.out.println("  ullat at y" + i + " is " + ullat_List.get(Dth).get(i));
-                System.out.println("  lrlat at y" + i + " is " + lrlat_List.get(Dth).get(i));
+                // System.out.println("  ullon at x" + i + " is " + ullon_List.get(Dth).get(i));
+                // System.out.println("  lrlon at x" + i + " is " + lrlon_List.get(Dth).get(i));
+                // System.out.println("  ullat at y" + i + " is " + ullat_List.get(Dth).get(i));
+                // System.out.println("  lrlat at y" + i + " is " + lrlat_List.get(Dth).get(i));
             }
         }
     }
@@ -140,11 +140,11 @@ public class Rasterer {
         }
 
 
-        System.out.println("DEBUG:");
-        System.out.println(params);
-        System.out.println("    " + LonDPP);
-        System.out.println("    " + depth + " is the BEST zoom level");
-        System.out.println("    ulx: " + ulx + " uly: " + uly + " lrx: " + lrx + " lry: " + lry);
+        // System.out.println("DEBUG:");
+        // System.out.println(params);
+        // System.out.println("    " + LonDPP);
+        // System.out.println("    " + depth + " is the BEST zoom level");
+        // System.out.println("    ulx: " + ulx + " uly: " + uly + " lrx: " + lrx + " lry: " + lry);
 
         results.put("render_grid", render_grid);
         results.put("raster_ul_lon", raster_ul_lon);

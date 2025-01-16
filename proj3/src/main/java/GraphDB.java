@@ -134,11 +134,7 @@ public class GraphDB {
      * @return An iterable of id's of all vertices in the graph.
      */
     Iterable<Long> vertices() {
-        List<Long> vertices = new ArrayList<>();
-        for (Long id : nodes.keySet()) {
-            vertices.add(id);
-        }
-        return vertices;
+        return new ArrayList<>(nodes.keySet());
     }
 
     /**
@@ -235,6 +231,15 @@ public class GraphDB {
      */
     double lat(long v) {
         return nodes.get(v).lat;
+    }
+
+    public String getWayName(long nextNode, long nextNextNode) {
+        Set<Long> intersection = new HashSet<>(nodes.get(nextNode).adjacentEdge);
+        intersection.retainAll(nodes.get(nextNextNode).adjacentEdge);
+        for (Long id : intersection) {
+            return edges.get(id).tags.get("name");
+        }
+        return "unknown road";
     }
 
     static class Node {
