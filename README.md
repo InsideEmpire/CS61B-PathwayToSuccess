@@ -36,7 +36,7 @@
 
   - HW 4✅ - 8 Puzzle - [Solution](hw4/) - [Website](https://sp18.datastructur.es/materials/hw/hw4/hw4)
 
-  - HW 5 - Seam Carving - [Solution](hw5/) - [Website](https://sp18.datastructur.es/materials/hw/hw5/hw5)
+  - HW 5✅ - Seam Carving - [Solution](hw5/) - [Website](https://sp18.datastructur.es/materials/hw/hw5/hw5)
 
   - HW 6 - Boggle - [Solution](hw6/) - [Website](https://sp18.datastructur.es/materials/hw/hw6/hw6)
 
