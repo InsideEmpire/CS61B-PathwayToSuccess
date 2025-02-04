@@ -23,7 +23,7 @@
 
   - Lab 13✅ - Radix Sorts - [Solution](lab13/) - [Website](https://sp18.datastructur.es/materials/lab/lab13/lab13)
 
-  - Lab 14 - Fractal Sound - [Solution](lab14/) - [Website](https://sp18.datastructur.es/materials/lab/lab14/lab14)
+  - Lab 14✅ - Fractal Sound - [Solution](lab14/) - [Website](https://sp18.datastructur.es/materials/lab/lab14/lab14)
 
   - Lab 15 - HugLife - [Solution](lab15/) - [Website](https://sp18.datastructur.es/materials/lab/lab15/lab15)
 
