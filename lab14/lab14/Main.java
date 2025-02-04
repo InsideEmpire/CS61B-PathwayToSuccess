@@ -33,8 +33,12 @@ public class Main {
 //		GeneratorAudioVisualizer gav = new GeneratorAudioVisualizer(generator);
 //		gav.drawAndPlay(4096, 1000000);
 
-		Generator generator = new StrangeBitwiseGenerator(512);
+		Generator generator = new AcceleratingSawToothGenerator(200, 1.1);
 		GeneratorAudioVisualizer gav = new GeneratorAudioVisualizer(generator);
 		gav.drawAndPlay(4096, 1000000);
+
+//		Generator generator = new StrangeBitwiseGenerator(512);
+//		GeneratorAudioVisualizer gav = new GeneratorAudioVisualizer(generator);
+//		gav.drawAndPlay(4096, 1000000);
 	}
 } 
