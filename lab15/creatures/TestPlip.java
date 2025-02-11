@@ -43,7 +43,7 @@ public class TestPlip {
         assertEquals(p.energy(), replicate.energy(), 0.1);
     }
 
-    //@Test
+    @Test
     public void testChoose() {
         Plip p = new Plip(1.2);
         HashMap<Direction, Occupant> surrounded = new HashMap<Direction, Occupant>();

@@ -5,7 +5,9 @@ import huglife.Action;
 import huglife.Occupant;
 
 import java.awt.Color;
+import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 /** An implementation of a motile pacifist photosynthesizer.
  *  @author Josh Hug
@@ -92,6 +94,16 @@ public class Plip extends Creature {
      *  for an example to follow.
      */
     public Action chooseAction(Map<Direction, Occupant> neighbors) {
+        List<Direction> empties = getNeighborsOfType(neighbors, "empty");
+        List<Direction> cloruses = getNeighborsOfType(neighbors, "clorus");
+        Random random = new Random();
+        if (empties.size() == 0) {
+            return new Action(Action.ActionType.STAY);
+        } else if (this.energy >= 1) {
+            return new Action(Action.ActionType.REPLICATE, empties.get(random.nextInt(empties.size())));
+        } else if (cloruses.size() > 0 && random.nextBoolean()) {
+            return new Action(Action.ActionType.MOVE, empties.get(random.nextInt(empties.size())));
+        }
         return new Action(Action.ActionType.STAY);
     }
 
