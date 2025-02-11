@@ -71,12 +71,14 @@ public class Plip extends Creature {
 
     }
 
-    /** Plips and their offspring each get 50% of the energy, with none
-     *  lost to the process. Now that's efficiency! Returns a baby
-     *  Plip.
+    /**
+     * Plips and their offspring each get 50% of the energy, with none
+     * lost to the process. Now that's efficiency! Returns a baby
+     * Plip.
      */
     public Plip replicate() {
-        return this;
+        this.energy /= 2;
+        return new Plip(this.energy);
     }
 
     /** Plips take exactly the following actions based on NEIGHBORS:
