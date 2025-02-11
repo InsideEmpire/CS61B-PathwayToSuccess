@@ -40,7 +40,7 @@
 
   - HW 6✅ - Boggle - [Solution](hw6/) - [Website](https://sp18.datastructur.es/materials/hw/hw6/hw6)
 
-  - HW 7 - Huffman Coding - [Solution](hw7/) - [Website](https://sp18.datastructur.es/materials/hw/hw7/hw7)
+  - HW 7✅ - Huffman Coding - [Solution](hw7/) - [Website](https://sp18.datastructur.es/materials/hw/hw7/hw7)
 
 - ### Project
   - Proj 0✅ - NBody Simulation - [Solution](proj0/) - [Website](https://sp18.datastructur.es/materials/proj/proj0/proj0)
