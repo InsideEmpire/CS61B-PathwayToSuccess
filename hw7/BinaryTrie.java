@@ -68,7 +68,7 @@ public class BinaryTrie implements Serializable {
         }
     }
 
-    private static class Node implements Comparable<Node> {
+    private static class Node implements Comparable<Node>, Serializable {
         private final char ch;
         private final int freq;
         private final Node left, right;
