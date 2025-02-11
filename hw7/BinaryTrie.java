@@ -34,8 +34,13 @@ public class BinaryTrie implements Serializable {
     public Match longestPrefixMatch(BitSequence querySequence) {
         int index = 0;
         Node node = root;
-        StringBuffer bitSequence = new StringBuffer();
+        StringBuilder bitSequence = new StringBuilder();
+
         while (!node.isLeaf()) {
+            if (index >= querySequence.length()) {
+                throw new IndexOutOfBoundsException("Query sequence is too short.");
+            }
+
             if (querySequence.bitAt(index) == 0) {
                 node = node.left;
                 bitSequence.append('0');
@@ -43,8 +48,8 @@ public class BinaryTrie implements Serializable {
                 node = node.right;
                 bitSequence.append('1');
             }
+            index++;
         }
-
         return new Match(new BitSequence(bitSequence.toString()), node.ch);
     }
 
