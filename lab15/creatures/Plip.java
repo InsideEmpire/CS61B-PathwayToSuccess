@@ -3,10 +3,11 @@ import huglife.Creature;
 import huglife.Direction;
 import huglife.Action;
 import huglife.Occupant;
-import huglife.HugLifeUtils;
+
 import java.awt.Color;
-import java.util.Map;
 import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
 /** An implementation of a motile pacifist photosynthesizer.
  *  @author Josh Hug
@@ -23,10 +24,10 @@ public class Plip extends Creature {
     /** creates plip with energy equal to E. */
     public Plip(double e) {
         super("plip");
-        r = 0;
-        g = 0;
-        b = 0;
+        r = 99;
+        b = 76;
         energy = e;
+        g = greenColor();
     }
 
     /** creates a plip with energy equal to 1. */
@@ -42,8 +43,12 @@ public class Plip extends Creature {
      *  that you get this exactly correct.
      */
     public Color color() {
-        g = 63;
+        g = greenColor();
         return color(r, g, b);
+    }
+
+    private int greenColor() {
+        return (int) (63.0 + 96.0 * this.energy);
     }
 
     /** Do nothing with C, Plips are pacifists. */
@@ -55,19 +60,27 @@ public class Plip extends Creature {
      *  private static final variable. This is not required for this lab.
      */
     public void move() {
+        this.energy -= 0.15;
     }
 
 
     /** Plips gain 0.2 energy when staying due to photosynthesis. */
     public void stay() {
+        this.energy += 0.2;
+        if (this.energy > 2) {
+            this.energy = 2;
+        }
+
     }
 
-    /** Plips and their offspring each get 50% of the energy, with none
-     *  lost to the process. Now that's efficiency! Returns a baby
-     *  Plip.
+    /**
+     * Plips and their offspring each get 50% of the energy, with none
+     * lost to the process. Now that's efficiency! Returns a baby
+     * Plip.
      */
     public Plip replicate() {
-        return this;
+        this.energy /= 2;
+        return new Plip(this.energy);
     }
 
     /** Plips take exactly the following actions based on NEIGHBORS:
@@ -81,6 +94,16 @@ public class Plip extends Creature {
      *  for an example to follow.
      */
     public Action chooseAction(Map<Direction, Occupant> neighbors) {
+        List<Direction> empties = getNeighborsOfType(neighbors, "empty");
+        List<Direction> cloruses = getNeighborsOfType(neighbors, "clorus");
+        Random random = new Random();
+        if (empties.size() == 0) {
+            return new Action(Action.ActionType.STAY);
+        } else if (this.energy >= 1) {
+            return new Action(Action.ActionType.REPLICATE, empties.get(random.nextInt(empties.size())));
+        } else if (cloruses.size() > 0 && random.nextBoolean()) {
+            return new Action(Action.ActionType.MOVE, empties.get(random.nextInt(empties.size())));
+        }
         return new Action(Action.ActionType.STAY);
     }
 
