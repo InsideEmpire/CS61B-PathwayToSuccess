@@ -25,7 +25,7 @@
 
   - Lab 14✅ - Fractal Sound - [Solution](lab14/) - [Website](https://sp18.datastructur.es/materials/lab/lab14/lab14)
 
-  - Lab 15 - HugLife - [Solution](lab15/) - [Website](https://sp18.datastructur.es/materials/lab/lab15/lab15)
+  - Lab 15✅ - HugLife - [Solution](lab15/) - [Website](https://sp18.datastructur.es/materials/lab/lab15/lab15)
 
 - ### HW
   - HW 1✅ - Packages, Interfaces, Generics, Exceptions, Iteration - [Solution](hw1/) - [Website](https://sp18.datastructur.es/materials/hw/hw1/hw1)
